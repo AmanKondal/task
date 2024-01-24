@@ -9,7 +9,7 @@ include'main.php';
     <title>Document</title>
 </head>
 <body>
-    <form method="post" action="#" enctype="multipart/form-data">
+    <form method="post" action="" >
         First Name <input name="firstname" type="text">
         Last Name <input name="lastname" type="text">
         Age <input name="age" type="number">
