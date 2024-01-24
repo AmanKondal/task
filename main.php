@@ -1,36 +1,25 @@
+
 <?php
 $conn = mysqli_connect("localhost", "root", "", "record") or die("Connection failed: " . mysqli_connect_error());
-
-if (isset($_POST['submit'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $firstname = $_POST['firstname'];
-    $lastname = $_POST['lastname'];
+    $lastname = $_POST['last'];
     $age = $_POST['age'];
     $email = $_POST['email'];
-    $phoneno = $_POST['phoneno'];
+    $phoneno = $_POST['phone'];
     $gender = isset($_POST['gender']) ? $_POST['gender'] : '';
-
-    $image = $_FILES["image"]["name"];
-    $image_tmp = $_FILES["image"]["tmp_name"];
-
-    // Check if the file was uploaded successfully
-    if (!is_uploaded_file($image_tmp)) {
-        echo "File upload failed.";
+    $imagename = $_FILES['imagename']['name'];
+    $imagetmp = $_FILES['imagename']['tmp_name'];
+    // Move the uploaded file to a directory
+    $uploads_dir = 'uploads/';
+    move_uploaded_file($imagetmp, $uploads_dir . $imagename);
+   
+    $sql = "INSERT INTO studentrecord(f_name, l_name, age, emailId, phone, gender, userimage) VALUES ('$firstname', '$lastname', $age, '$email', $phoneno, '$gender', '$imagename')";
+    if (mysqli_query($conn, $sql)) {
+        echo "Record added successfully";
     } else {
-        // Assuming you have a folder named "uploads" to store images
-        move_uploaded_file($image_tmp, 'uploads/' . $image);
-
-        $sql = "INSERT INTO studentrecord(f_name, l_name, age, emailId, phone, gender, userimage) VALUES ('$firstname', '$lastname', $age, '$email', $phoneno, '$gender', '$image')";
-
-        var_dump($sql);
-        exit;
-
-        if (mysqli_query($conn, $sql)) {
-            echo "Record added successfully";
-        } else {
-            echo "Error: " . $sql . "<br>" . mysqli_error($conn);
-        }
+        echo "Error: " . mysqli_error($conn);
     }
-
     mysqli_close($conn);
 }
 ?>
