@@ -10,7 +10,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $gender = isset($_POST['gender']) ? $_POST['gender'] : '';
     $imagename = $_FILES['imagename']['name'];
     $imagetmp = $_FILES['imagename']['tmp_name'];
-    // Move the uploaded file to a directory
     $uploads_dir = 'uploads/';
     move_uploaded_file($imagetmp, $uploads_dir . $imagename);
    

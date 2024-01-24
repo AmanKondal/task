@@ -71,7 +71,6 @@
 
 </nav>
 <form action="main.php" method="post" enctype="multipart/form-data">
-
     <div>
         <label> Image</label>
         <input type="file" name="imagename" id="fileToUpload">
@@ -96,7 +95,6 @@
     </div>
     <div> <label><input type="radio" name="gender" value="male"> Male</label>
         <label><input type="radio" name="gender" value="female"> Female</label>
-
         <button name="submit" value="submit" type="submit">Submit</button>
 </form>
 </body>
