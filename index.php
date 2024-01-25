@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
     <style>
@@ -58,46 +59,42 @@
             cursor: pointer;
             font-size: 16px;
         }
-
-        button[type="submit"]:hover {
-            background-color: #45a049;
-        }
-
-        button[type="submit"]:focus {
-            outline: none;
-        }
     </style>
 </head>
 
 </nav>
 <form action="main.php" method="post" enctype="multipart/form-data">
+    <center><?php include 'main.php'; ?></center>
     <div>
-        <label> Image</label>
+        <label>Image</label>
         <input type="file" name="imagename" id="fileToUpload">
     </div>
     <div>
-        <label>First Name</label><input type="text" name="firstname">
+        <label>First Name</label>
+        <input type="text" name="firstname">
     </div>
     <div>
-        <label>last Name</label><input type="text" name="last">
+        <label>Last Name</label>
+        <input type="text" name="lastname">
     </div>
     <div>
         <label>Age</label>
         <input type="number" name="age">
     </div>
     <div>
-        <label>email-Id</label>
-        <input type="text" name="email">
+        <label>Email-Id</label>
+        <input type="email" name="email">
     </div>
     <div>
         <label>Phone-No</label>
         <input type="number" name="phone">
     </div>
-    <div> <label><input type="radio" name="gender" value="male"> Male</label>
+    <div>
+        <label><input type="radio" name="gender" value="male"> Male</label>
         <label><input type="radio" name="gender" value="female"> Female</label>
-        <button name="submit" value="submit" type="submit">Submit</button>
+    </div>
+    <input type="submit" value="Submit" name="submit">
 </form>
-</body>
 </body>
 
 </html>
