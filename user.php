@@ -18,31 +18,50 @@
     <nav>
         <a href="index.php" class="btn btn-success">Create-User</a>
     </nav>
-    <center><?php include 'main.php'; ?></center>
-
-    <div id="table-data" >
-
+    <div id="search" style="position: absolute; right: 4px; top: 5px; margin-right: 10px;">
+        <label>Search</label>
+        <input type="text" id="searchInput" autocomplete="off">
     </div>
-<script>
-      $(document).ready(function(){
-        function loadTable(page){
-            $.ajax({
-                url:"user-view.php",
-                type:"POST",
-                data:{page_no:page},
-                success:function(data){
-                  $("#table-data").html(data);  
-                }
+
+
+    <center><?php include 'main.php'; ?></center>
+    <div id="table-data">
+    </div>
+    <script>
+        $(document).ready(function() {
+            $("#searchInput").on("keyup", function() {
+                var search_term = $(this).val();
+                $.ajax({
+                    url: "search-user.php",
+                    type: "POST",
+                    data: {
+                        search: search_term
+                    },
+                    success: function(data) {
+                        $("#table-data").html(data);
+                    }
+                })
             })
-        }
-        loadTable();
-        $(document).on("click","#pagination a",function(e){
-            e.preventDefault();
-            var page_id=$(this).attr("id");
-            loadTable(page_id);
+            function loadTable(page) {
+                $.ajax({
+                    url: "user-view.php",
+                    type: "POST",
+                    data: {
+                        page_no: page
+                    },
+                    success: function(data) {
+                        $("#table-data").html(data);
+                    }
+                })
+            }
+            loadTable();
+            $(document).on("click", "#pagination a", function(e) {
+                e.preventDefault();
+                var page_id = $(this).attr("id");
+                loadTable(page_id);
+            });
         })
-      })
-      </script>
+    </script>
 
 </body>
 
