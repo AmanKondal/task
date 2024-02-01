@@ -1,6 +1,6 @@
 <?php
 $conn = mysqli_connect("localhost", "root", "", "record") or die("Connection failed:" . mysqli_connect_error());
-$search_value=$_POST["search"];
+$search_value = mysqli_real_escape_string($conn, $_POST["search"]);
 $limit = 5;
 $page = "";
 if (isset($_POST["page_no"])) {
@@ -40,7 +40,7 @@ if (mysqli_num_rows($result) > 0) {
              ";
         $a++;
     }
-    
+
     $output .= " </table>";
     $sql_total =  "SELECT * FROM studentrecord WHERE f_name LIKE '%{$search_value}%'";
     $records = mysqli_query($conn, $sql_total) or die("Query Unsuccessful.");
@@ -57,11 +57,11 @@ if (mysqli_num_rows($result) > 0) {
         } else {
             $class_name = "";
         }
-        $output .= "<li class='page-item {$class_name}'><a class='page-link'  id='{$i}' href='?page_no={$i}'>{$i}</a></l>";
+        $output .= "<li class='page-item {$class_name}'><a class='page-link' id='{$i}' href='?search={$search_value}&page_no={$i}' data-page='{$i}' data-search='{$search_value}'>{$i}</a></li>";
+
     }
     $output .= " </table>";
     echo $output;
-
 } else {
     echo "<h2>No Record Found.";
 }

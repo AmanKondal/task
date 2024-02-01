@@ -22,9 +22,6 @@
         <label>Search</label>
         <input type="text" id="searchInput" autocomplete="off">
     </div>
-
-
-    <center><?php include 'main.php'; ?></center>
     <div id="table-data">
     </div>
     <script>
@@ -42,6 +39,7 @@
                     }
                 })
             })
+
             function loadTable(page) {
                 $.ajax({
                     url: "user-view.php",
