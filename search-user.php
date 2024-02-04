@@ -1,3 +1,10 @@
+<div class="modal" id="modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+
 <?php
 $conn = mysqli_connect("localhost", "root", "", "record") or die("Connection failed:" . mysqli_connect_error());
 $search_value = mysqli_real_escape_string($conn, $_POST["search"]);
@@ -8,12 +15,14 @@ if (isset($_POST["page_no"])) {
 } else {
     $page = 1;
 }
-$start = ($page - 1) * $limit;
-$sql = "SELECT * FROM studentrecord WHERE f_name LIKE '%{$search_value}%' LIMIT {$start}, {$limit}";
+$sno = ($page - 1) * $limit + 1;
+$sql = "SELECT * FROM studentrecord WHERE f_name LIKE '%{$search_value}%' LIMIT {$sno}, {$limit}";
 $result = mysqli_query($conn, $sql) or die("Query Unsuccessful.");
-
-$output = "";
-$a = 1;
+$output = ""; ?>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<?php
 if (mysqli_num_rows($result) > 0) {
     $output .= '
     <table class="table table-bordered table-dark">
@@ -25,20 +34,23 @@ if (mysqli_num_rows($result) > 0) {
             <th scope="col">Phone-No</th>
             <th scope="col">Gender</th>
             <th scope="col">Image</th>
+            <th scope="col">Action</th>
         </tr>
       ';
     while ($row = mysqli_fetch_assoc($result)) {
         $output .= "<tr>
-                <td scope='row'>$a</td>
+                <td scope='row'>$sno</td>
                 <td scope='row'>{$row['f_name']} {$row['l_name']}</td>
                 <td scope='row'>{$row['age']}</td>
                 <td scope='row'>{$row['emailId']}</td>
                 <td>{$row['phone']}</td>
                 <td>{$row['gender']}</td>
                 <td><img src='uploads/{$row['userimage']}' alt='User Image' width='50'></td>
-              </tr>
+                <td><button type='button' class='btn btn-success'  data-eid='{$row['id']}'>Edit</button>
+                <button type='button' class='btn btn-danger' data-id='{$row['id']}'>Delete</button></td>            
+                </tr>
              ";
-        $a++;
+        $sno++;
     }
 
     $output .= " </table>";
@@ -58,10 +70,51 @@ if (mysqli_num_rows($result) > 0) {
             $class_name = "";
         }
         $output .= "<li class='page-item {$class_name}'><a class='page-link' id='{$i}' href='?search={$search_value}&page_no={$i}' data-page='{$i}' data-search='{$search_value}'>{$i}</a></li>";
-
     }
     $output .= " </table>";
     echo $output;
 } else {
     echo "<h2>No Record Found.";
 }
+?>
+<script>
+    $(document).on("click", ".btn.btn-danger", function() {
+        var confirmDelete = confirm("Do You Really Want to Delete This Record ");
+        var userId = $(this).data("id");
+        var element = this;
+        if (confirmDelete) {
+            $.ajax({
+                url: "Delete.php",
+                type: "POST",
+                data: {
+                    id: userId
+                },
+                success: function(data) {
+                    if (data == 1) {
+                        $(element).closest("tr").fadeOut();
+                    } else {
+                        $("#error-message").html("can't Delete Record.").slideDown();
+                        $("#success-message").slideUp();
+                    }
+                }
+            })
+        }
+    });
+    $(document).on("click", ".btn.btn-success", function() {
+        confirm("Do You Really want to Update this record ?")
+        var updateId = $(this).data("eid");
+        if (confirm("Do You Really Want to Delete This Record")) {
+            $.ajax({
+                url: "update.php",
+                type: "POST",
+                data: {
+                    id: updateId
+                },
+                success: function(data) {
+                    $("#modal .modal-content").html(data);
+                    $("#modal").modal("show");
+                }
+            });
+        }
+    });
+</script>

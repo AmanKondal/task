@@ -16,12 +16,13 @@
 
 <body>
     <nav>
-        <a href="index.php" class="btn btn-success">Create-User</a>
+        <a href="index.php" class="btn btn-primary">Create-User</a>
     </nav>
-    <div id="search" style="position: absolute; right: 4px; top: 5px; margin-right: 10px;">
+    <div id="search" style="position: absolute; right: 80px; top: 5px; margin-right: 10px;">
         <label>Search</label>
         <input type="text" id="searchInput" autocomplete="off">
     </div>
+    <button class="btn btn-warning" id="resetButton" style="position: absolute; right: 10px; top: 2px; margin-right: 10px;">Reset</button>
     <div id="table-data">
     </div>
     <script>
@@ -58,9 +59,12 @@
                 var page_id = $(this).attr("id");
                 loadTable(page_id);
             });
+            $("#resetButton").click(function() {
+                $("#searchInput").val('');
+                loadTable();
+            });
         })
     </script>
-
 </body>
 
 </html>

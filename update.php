@@ -12,9 +12,11 @@ if ($updateid) {
         <form method="post" enctype="multipart/form-data" class="container mt-5" id="myForm">
             <div class="text-center"></div>
             <div class="form-group">
-                <label for="image">Image</label>
-                <input type="file" name="imagename" id="imagename" class="form-control">
-                <img src='uploads/<?php echo $row['userimage']; ?>' alt='User Image' width='50'>
+                <label for="imagename">Image</label>
+                <div class="input-group">
+                    <input type="file" name="imagename" value="<?php echo $row['userimage']; ?>" id="imagename" class="form-control">
+                    <img src='uploads/<?php echo $row['userimage']; ?>' alt='User Image' width='50' class="ml-2">
+                </div>
             </div>
             <div class="form-group">
                 <label for="firstname">First Name</label>
@@ -60,11 +62,9 @@ if ($updateid) {
         $("#myForm").submit(function(e) {
             e.preventDefault();
             $(".error-message").remove();
-
             var fd = new FormData();
             var image = $('#imagename')[0].files[0];
             var id = "<?php echo $row['id']; ?>";
-
             fd.append('id', id);
             fd.append('imagename', image);
             fd.append('firstname', $("#firstname").val());
@@ -84,6 +84,7 @@ if ($updateid) {
                     console.log("AJAX Success:", data);
                     if (data) {
                         alert("Record updated successfully!");
+                        window.location.href = 'user.php';
                     } else {
                         alert("Can't save Record.");
                     }

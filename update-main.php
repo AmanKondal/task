@@ -14,13 +14,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     move_uploaded_file($imagetmp, $uploads_dir . $imagename);
     $sql = "UPDATE studentrecord SET `f_name`='$firstname', `l_name`='$lastname', `age`='$age', `emailId`='$email', `phone`='$phoneno', `gender`='$gender', `userimage`='$imagename' WHERE id=$updateid";
     if (mysqli_query($conn, $sql)) {
-        $message =  'Your Record Add successfully';
-        $color = 'success';
-        header("location:User.php?message=" . urlencode($message) . "&color=$color");
+       echo 1;
     } else {
-        $message =  'Your Record Not Add ';
-        $color = 'danger';
-        header("location:update.php?message=" . mysqli_error($conn) . urlencode($message) . "&color=$color");
+       echo 0;
     }
     mysqli_close($conn);
 }
