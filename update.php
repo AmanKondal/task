@@ -91,11 +91,9 @@ if ($updateid) {
                 }
             });
         });
-
         function displayError(element, message) {
             $(element).after("<div class='error-message text-danger'>" + message + "</div>");
         }
-
         function isValidEmail(email) {
             var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             return emailRegex.test(email);

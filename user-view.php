@@ -101,18 +101,20 @@ if (mysqli_num_rows($result) > 0) {
         }
     });
     $(document).on("click", ".btn.btn-success", function() {
-        confirm("Do You Really want to Update this record ?")
+        var confirmEdit = confirm("Do You Really want to Update this record ?")
         var updateId = $(this).data("eid");
-        $.ajax({
-            url: "update.php",
-            type: "POST",
-            data: {
-                id: updateId
-            },
-            success: function(data) {
-                $("#modal .modal-content").html(data);
-                $("#modal").modal("show");
-            }
-        });
+        if (confirmEdit) {
+            $.ajax({
+                url: "update.php",
+                type: "POST",
+                data: {
+                    id: updateId
+                },
+                success: function(data) {
+                    $("#modal .modal-content").html(data);
+                    $("#modal").modal("show");
+                }
+            });
+        }
     });
 </script>

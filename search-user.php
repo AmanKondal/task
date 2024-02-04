@@ -58,7 +58,7 @@ if (mysqli_num_rows($result) > 0) {
     $records = mysqli_query($conn, $sql_total) or die("Query Unsuccessful.");
     $totalRecords = mysqli_num_rows($records);
     $totalPages = ceil($totalRecords / $limit);
-    $output .= '<div id="pagination">
+    $output .= '<div id="paginationid">
 <center>  
 <nav aria-label="Page navigation example">
 <ul class="pagination">
@@ -77,44 +77,3 @@ if (mysqli_num_rows($result) > 0) {
     echo "<h2>No Record Found.";
 }
 ?>
-<script>
-    $(document).on("click", ".btn.btn-danger", function() {
-        var confirmDelete = confirm("Do You Really Want to Delete This Record ");
-        var userId = $(this).data("id");
-        var element = this;
-        if (confirmDelete) {
-            $.ajax({
-                url: "Delete.php",
-                type: "POST",
-                data: {
-                    id: userId
-                },
-                success: function(data) {
-                    if (data == 1) {
-                        $(element).closest("tr").fadeOut();
-                    } else {
-                        $("#error-message").html("can't Delete Record.").slideDown();
-                        $("#success-message").slideUp();
-                    }
-                }
-            })
-        }
-    });
-    $(document).on("click", ".btn.btn-success", function() {
-        confirm("Do You Really want to Update this record ?")
-        var updateId = $(this).data("eid");
-        if (confirm("Do You Really Want to Delete This Record")) {
-            $.ajax({
-                url: "update.php",
-                type: "POST",
-                data: {
-                    id: updateId
-                },
-                success: function(data) {
-                    $("#modal .modal-content").html(data);
-                    $("#modal").modal("show");
-                }
-            });
-        }
-    });
-</script>
