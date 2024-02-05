@@ -14,8 +14,9 @@ if ($updateid) {
             <div class="form-group">
                 <label for="imagename">Image</label>
                 <div class="input-group">
-                    <input type="file" name="imagename" value="<?php echo $row['userimage']; ?>" id="imagename" class="form-control">
-                    <img src='uploads/<?php echo $row['userimage']; ?>' alt='User Image' width='50' class="ml-2">
+                    <input type="file" name="imagename" id="imagename" class="form-control">
+                    <img src='uploads/<?php echo $row['userimage']; ?>' id="previewImage" alt='User Image' width='50' class="ml-2" data-existing-image="<?php echo $row['userimage']; ?>">
+                    <input type="hidden" name="existing_image" id="existing_image" value="<?php echo $row['userimage']; ?>">
                 </div>
             </div>
             <div class="form-group">
@@ -56,47 +57,43 @@ if ($updateid) {
     }
 }
 ?>
+
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
-    $(document).ready(function() {
-        $("#myForm").submit(function(e) {
-            e.preventDefault();
-            $(".error-message").remove();
-            var fd = new FormData();
-            var image = $('#imagename')[0].files[0];
-            var id = "<?php echo $row['id']; ?>";
-            fd.append('id', id);
-            fd.append('imagename', image);
-            fd.append('firstname', $("#firstname").val());
-            fd.append('lastname', $("#lastname").val());
-            fd.append('age', $("#age").val());
-            fd.append('email', $("#email").val());
-            fd.append('phone', $("#phone").val());
-            fd.append('gender', $("input[name='gender']:checked").val());
+$("#myForm").submit(function (e) {
+    e.preventDefault();
+    $(".error-message").remove();
+    var fd = new FormData($("#myForm")[0]);
+    var imageInput = $('#imagename')[0];
+    var image = imageInput.files[0];
 
-            $.ajax({
-                url: "update-main.php",
-                type: "POST",
-                data: fd,
-                processData: false,
-                contentType: false,
-                success: function(data) {
-                    console.log("AJAX Success:", data);
-                    if (data) {
-                        alert("Record updated successfully!");
-                        window.location.href = 'user.php';
-                    } else {
-                        alert("Can't save Record.");
-                    }
-                }
-            });
-        });
-        function displayError(element, message) {
-            $(element).after("<div class='error-message text-danger'>" + message + "</div>");
-        }
-        function isValidEmail(email) {
-            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return emailRegex.test(email);
+    if (!imageInput.value) {
+        var existingImage = $("#existing_image").val();
+        fd.set('imagename', existingImage);
+    }
+    fd.append('id', "<?php echo $row['id']; ?>");
+    fd.append('firstname', $("#firstname").val());
+    fd.append('lastname', $("#lastname").val());
+    fd.append('age', $("#age").val());
+    fd.append('email', $("#email").val());
+    fd.append('phone', $("#phone").val());
+    fd.append('gender', $("input[name='gender']:checked").val());
+
+    $.ajax({
+        url: "update-main-db.php",
+        type: "POST",
+        data: fd,
+        processData: false,
+        contentType: false,
+        success: function (data) {
+            console.log("AJAX Success:", data);
+            if (data) {
+                alert("Record updated successfully!");
+                window.location.href = 'user-view.php';
+            } else {
+                alert("Can't save Record.");
+            }
         }
     });
+});
 </script>

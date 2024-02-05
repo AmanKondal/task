@@ -52,7 +52,6 @@ if (mysqli_num_rows($result) > 0) {
              ";
         $sno++;
     }
-
     $output .= " </table>";
     $sql_total =  "SELECT * FROM studentrecord WHERE f_name LIKE '%{$search_value}%'";
     $records = mysqli_query($conn, $sql_total) or die("Query Unsuccessful.");
@@ -69,7 +68,7 @@ if (mysqli_num_rows($result) > 0) {
         } else {
             $class_name = "";
         }
-        $output .= "<li class='page-item {$class_name}'><a class='page-link' id='{$i}' href='?search={$search_value}&page_no={$i}' data-page='{$i}' data-search='{$search_value}'>{$i}</a></li>";
+        $output .= "<li class='page-item {$class_name}'><a class='page-link' id='{$i}' href='?search={$search_value}&&page_no={$i}' data-page='{$i}' data-search='{$search_value}'>{$i}</a></li>";
     }
     $output .= " </table>";
     echo $output;

@@ -1,120 +1,113 @@
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<?php
-$conn = mysqli_connect("localhost", "root", "", "record") or die("Connection failed:" . mysqli_connect_error());
-$limit = 5;
-$page = "";
-if (isset($_POST["page_no"])) {
-    $page = $_POST["page_no"];
-} else {
-    $page = 1;
-}
-$sno = ($page - 1) * $limit + 1;
-$sql = "SELECT * FROM studentrecord LIMIT {$sno},{$limit}";
-$result = mysqli_query($conn, $sql) or die("Query Unsuccessful.");
-$output = "";
-?>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<div class="modal" id="modal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-        </div>
-    </div>
-</div>
-<?php
-if (mysqli_num_rows($result) > 0) {
-    $output .= '
-        <table class="table table-bordered table-dark">
-            <tr class="table-info">
-                <th scope="col">S.no</th>
-                <th scope="col">Name</th>
-                <th scope="col">Age</th>
-                <th scope="col">Email-Id</th>
-                <th scope="col">Phone-No</th>
-                <th scope="col">Gender</th>
-                <th scope="col">Image</th>
-                <th scope="col">Action</th>
-            </tr>
-        ';
-    while ($row = mysqli_fetch_assoc($result)) {
-        $output .= "<tr>
-                    <td scope='row'>$sno</td>
-                    <td scope='row'>{$row['f_name']} {$row['l_name']}</td>
-                    <td scope='row'>{$row['age']}</td>
-                    <td scope='row'>{$row['emailId']}</td>
-                    <td>{$row['phone']}</td>
-                    <td>{$row['gender']}</td>
-                    <td><img src='uploads/{$row['userimage']}' alt='User Image' width='50'></td>
-                    <td><button type='submit' class='btn btn-success' data-eid='{$row['id']}'>Edit</button>
-                    <button type='submit' class='btn btn-danger' data-id='{$row['id']}'>Delete</button>
-                        </td>
-                </tr>
-                ";
-        $sno++;
-    }
-    $output .= " </table>";
-    $sql_total = "SELECT * FROM studentrecord ";
-    $records = mysqli_query($conn, $sql_total) or die("Query Unsuccessful.");
-    $totalRecords = mysqli_num_rows($records);
-    $totalPages = ceil($totalRecords / $limit);
-    $output .= '<div id="pagination">
-    <center>  
-    <nav aria-label="Page navigation example">
-    <ul class="pagination">
-    ';
-    for ($i = 1; $i <= $totalPages; $i++) {
-        if ($i == $page) {
-            $class_name = "active";
-        } else {
-            $class_name = "";
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <title>Document</title>
+    <style>
+        .pagination {
+            justify-content: center;
         }
-        $output .= "<li class='page-item {$class_name}'><a class='page-link'  id='{$i}' href='?page_no={$i}'>{$i}</a></l>";
-    }
-    $output .= ' </ul>
+    </style>
+</head>
+
+<body>
+    <nav>
+        <a href="index.php" class="btn btn-primary">Create-User</a>
     </nav>
-    </center></div>';
-    echo $output;
-} else {
-    echo "<h2>No Record Found.";
-} ?>
-<script>
-    $(document).on("click", ".btn.btn-danger", function() {
-        var confirmDelete = confirm("Do You Really want to Delete this record ?")
-        var userId = $(this).data("id");
-        var element = this;
-        if (confirmDelete) {
-            $.ajax({
-                url: "Delete.php",
-                type: "POST",
-                data: {
-                    id: userId
-                },
-                success: function(data) {
-                    if (data == 1) {
-                        $(element).closest("tr").fadeOut();
-                    } else {
-                        $("#error-message").html("can't Delete Record.").slideDown();
-                        $("#success-message").slideUp();
+
+    <center><?php include_once 'Form-submit-db.php' ?></center>
+    <div id="search" style="position: absolute; right: 80px; top: 5px; margin-right: 10px;">
+        <label>Search</label>
+        <input type="text" id="searchInput" autocomplete="off">
+    </div>
+    <button class="btn btn-warning" id="resetButton" style="position: absolute; right: 10px; top: 2px; margin-right: 10px;">Reset</button>
+    <div id="table-data">
+    </div>
+    <script>
+        $(document).ready(function() {
+            $("#searchInput").on("keyup", function() {
+                var search_term = $(this).val();
+                $.ajax({
+                    url: "search-user.php",
+                    type: "POST",
+                    data: {
+                        search: search_term
+                    },
+                    success: function(data) {
+                        $("#table-data").html(data);
                     }
-                }
+                })
             })
-        }
-    });
-    $(document).on("click", ".btn.btn-success", function() {
-        var confirmEdit = confirm("Do You Really want to Update this record ?")
-        var updateId = $(this).data("eid");
-        if (confirmEdit) {
-            $.ajax({
-                url: "update.php",
-                type: "POST",
-                data: {
-                    id: updateId
-                },
-                success: function(data) {
-                    $("#modal .modal-content").html(data);
-                    $("#modal").modal("show");
-                }
+
+            function loadTable(page) {
+                $.ajax({
+                    url: "user-view-db.php",
+                    type: "POST",
+                    data: {
+                        page_no: page
+                    },
+                    success: function(data) {
+                        $("#table-data").html(data);
+                    }
+                })
+            }
+            loadTable();
+            $(document).on("click", "#pagination a", function(e) {
+                e.preventDefault();
+                var page_id = $(this).attr("id");
+                loadTable(page_id);
             });
-        }
-    });
-</script>
+            $("#resetButton").click(function() {
+                $("#searchInput").val('');
+                loadTable();
+            });
+        })
+        //Delete Code
+        $(document).on("click", ".btn.btn-danger", function() {
+            var confirmDelete = confirm("Do You Really want to Delete this record ?")
+            var userId = $(this).data("id");
+            var element = this;
+            if (confirmDelete) {
+                $.ajax({
+                    url: "Delete.php",
+                    type: "POST",
+                    data: {
+                        id: userId
+                    },
+                    success: function(data) {
+                        if (data == 1) {
+                            $(element).closest("tr").fadeOut();
+                            window.location.href = 'user-view.php';
+                        } else {
+                            $("#error-message").html("can't Delete Record.").slideDown();
+                            $("#success-message").slideUp();
+                        }
+                    }
+                })
+            }
+        });
+        // Edit Code
+        $(document).on("click", ".btn.btn-success", function() {
+            var confirmEdit = confirm("Do You Really want to Update this record ?")
+            var updateId = $(this).data("eid");
+            if (confirmEdit) {
+                $.ajax({
+                    url: "update.php",
+                    type: "POST",
+                    data: {
+                        id: updateId
+                    },
+                    success: function(data) {
+                        $("#modal .modal-content").html(data);
+                        $("#modal").modal("show");
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
