@@ -18,8 +18,6 @@
     <nav>
         <a href="index.php" class="btn btn-primary">Create-User</a>
     </nav>
-
-    <center><?php include_once 'Form-submit-db.php' ?></center>
     <div id="search" style="position: absolute; right: 80px; top: 5px; margin-right: 10px;">
         <label>Search</label>
         <input type="text" id="searchInput" autocomplete="off">
@@ -29,20 +27,32 @@
     </div>
     <script>
         $(document).ready(function() {
-            $("#searchInput").on("keyup", function() {
-                var search_term = $(this).val();
+            // search-user code 
+            function loadsearch(page) {
+                var search_term = $("#searchInput").val();
                 $.ajax({
                     url: "search-user.php",
                     type: "POST",
                     data: {
-                        search: search_term
+                        search: search_term,
+                        page_no: page
                     },
                     success: function(data) {
                         $("#table-data").html(data);
                     }
-                })
-            })
+                });
+            }
 
+            $(document).on("keyup", "#searchInput", function() {
+                loadsearch();
+            });
+            // code for pagination search
+            $(document).on("click", "#paginationid a", function(e) {
+                e.preventDefault();
+                var page_id = $(this).attr("id");
+                loadsearch(page_id);
+            });
+            // user-view load code 
             function loadTable(page) {
                 $.ajax({
                     url: "user-view-db.php",
@@ -53,19 +63,23 @@
                     success: function(data) {
                         $("#table-data").html(data);
                     }
-                })
+                });
             }
+
             loadTable();
+            // pagination for user-view
             $(document).on("click", "#pagination a", function(e) {
                 e.preventDefault();
                 var page_id = $(this).attr("id");
                 loadTable(page_id);
             });
+            // Rest Code 
             $("#resetButton").click(function() {
                 $("#searchInput").val('');
                 loadTable();
             });
-        })
+        });
+
         //Delete Code
         $(document).on("click", ".btn.btn-danger", function() {
             var confirmDelete = confirm("Do You Really want to Delete this record ?")
@@ -110,4 +124,5 @@
         });
     </script>
 </body>
+
 </html>

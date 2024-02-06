@@ -1,5 +1,6 @@
 <?php
 $conn = mysqli_connect("localhost", "root", "", "record") or die("Connection failed:" . mysqli_connect_error());
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $firstname = $_POST['firstname'];
     $lastname = $_POST['lastname'];
@@ -11,20 +12,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $imagetmp = $_FILES['imagename']['tmp_name'];
     $uploads_dir = 'uploads/';
     move_uploaded_file($imagetmp, $uploads_dir . $imagename);
-    $sql = "INSERT INTO studentrecord (`f_name`, `l_name`, `age`, `emailId`, `phone`, `gender`, `userimage`) VALUES ('$firstname', '$lastname', $age, '$email', $phoneno, '$gender', '$imagename')";
 
-    if (mysqli_query($conn, $sql)) {
-        $message =  'Your Record Add successfully';
+    $sql = $conn->prepare("INSERT INTO studentrecord (`f_name`, `l_name`, `age`, `emailId`, `phone`, `gender`, `userimage`) VALUES (?,?,?,?,?,?,?)");
+    $sql->bind_param("sssssss", $firstname, $lastname, $age, $email, $phoneno, $gender, $imagename);
+    $sql->execute();
+
+    if ($sql) {
+        $message = 'Your Record Added successfully';
         $color = 'success';
-        header("location:User-view.php?message=" . urlencode($message) . "&color=$color");
+        header("location: User-view.php?message=" . urlencode($message) . "&color=$color");
+        exit();
     } else {
-        $message =  'Your Record Not Add ';
+        $message = 'Your Record Not Added';
         $color = 'danger';
-        header("location:index.php?message=" . mysqli_error($conn) . urlencode($message) . "&color=$color");
+        header("location: index.php?message=" . urlencode($message) . "&color=$color");
+        exit();
     }
-    mysqli_close($conn);
 }
-if (isset($_GET['message'])) : ?>
+mysqli_close($conn);
+
+if (isset($_GET['message'])) :
+?>
     <div class="alert alert-<?= $_GET['color'] ?> my-3" role="alert" id="feedback">
         <?= urldecode($_GET['message']); ?>
     </div>

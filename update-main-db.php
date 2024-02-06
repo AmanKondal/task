@@ -12,19 +12,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $imagename = isset($_FILES['imagename']['name']) ? $_FILES['imagename']['name'] : '';
     $imagetmp = isset($_FILES['imagename']['tmp_name']) ? $_FILES['imagename']['tmp_name'] : '';
     $uploads_dir = 'uploads/';
-
     if (!empty($imagename) && !empty($imagetmp)) {
         move_uploaded_file($imagetmp, $uploads_dir . $imagename);
     } else {
         $imagename = $_POST['existing_image'];
     }
-
-    $sql = "UPDATE studentrecord SET `f_name`='$firstname', `l_name`='$lastname', `age`='$age', `emailId`='$email', `phone`='$phoneno', `gender`='$gender', `userimage`='$imagename' WHERE id=$updateid";
-
-    if (mysqli_query($conn, $sql)) {
-        echo 1; // Success
+    $sql = $conn->prepare("UPDATE studentrecord SET `f_name`=?, `l_name`=?, `age`=?, `emailId`=?, `phone`=?, `gender`=?, `userimage`=? WHERE id=?");
+    $sql->bind_param("sssssssi", $firstname, $lastname, $age, $email, $phoneno, $gender, $imagename, $updateid); 
+    $sql->execute();
+    if ($sql) {
+        echo 1; 
     } else {
-        echo 0; // Failure
+        echo 0; 
     }
 
     mysqli_close($conn);

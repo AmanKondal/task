@@ -83,12 +83,3 @@ if (mysqli_num_rows($result) > 0) {
     echo "<h2>No Record Found.";
 } 
 ?>
-
-
-
-
-
-
-
-
-
