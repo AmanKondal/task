@@ -9,12 +9,10 @@ if (isset($_POST["page_no"])) {
     $page = 1;
 }
 $sno = ($page - 1) * $limit + 1;
-$sql = "SELECT * FROM studentrecord WHERE f_name LIKE '%{$search_value}%' LIMIT {$sno}, {$limit}";
+$sql = "SELECT * FROM studentrecord WHERE f_name LIKE '%{$search_value}%' OR l_name LIKE '%{$search_value}%'  LIMIT {$sno}, {$limit}";
 $result = mysqli_query($conn, $sql) or die("Query Unsuccessful.");
 $output = ""; ?>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <?php
 if (mysqli_num_rows($result) > 0) {
     $output .= '

@@ -42,7 +42,7 @@
                     }
                 });
             }
-
+            
             $(document).on("keyup", "#searchInput", function() {
                 loadsearch();
             });
@@ -79,7 +79,6 @@
                 loadTable();
             });
         });
-
         //Delete Code
         $(document).on("click", ".btn.btn-danger", function() {
             var confirmDelete = confirm("Do You Really want to Delete this record ?")

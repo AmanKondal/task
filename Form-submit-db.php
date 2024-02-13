@@ -1,6 +1,5 @@
 <?php
-$conn = mysqli_connect("localhost", "root", "", "record") or die("Connection failed:" . mysqli_connect_error());
-
+$conn = new PDO('mysql:host=localhost;dbname=record','root','');
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $firstname = $_POST['firstname'];
     $lastname = $_POST['lastname'];
@@ -13,10 +12,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $uploads_dir = 'uploads/';
     move_uploaded_file($imagetmp, $uploads_dir . $imagename);
 
-    $sql = $conn->prepare("INSERT INTO studentrecord (`f_name`, `l_name`, `age`, `emailId`, `phone`, `gender`, `userimage`) VALUES (?,?,?,?,?,?,?)");
-    $sql->bind_param("sssssss", $firstname, $lastname, $age, $email, $phoneno, $gender, $imagename);
-    $sql->execute();
-
+    $sql = $conn->prepare("INSERT INTO studentrecord (`f_name`, `l_name`, `age`, `emailId`, `phone`, `gender`, `userimage`) VALUES (?, ?, ?, ?, ?, ?, ?)");
+    $sql->execute([$firstname, $lastname, $age, $email, $phoneno, $gender, $imagename]);
     if ($sql) {
         $message = 'Your Record Added successfully';
         $color = 'success';
@@ -29,7 +26,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 }
-mysqli_close($conn);
 
 if (isset($_GET['message'])) :
 ?>
