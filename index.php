@@ -1,3 +1,31 @@
+<?php
+include 'main_db.php';
+$database = new Database();
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $table = 'studentrecord';
+    $values = array(
+        'userimage' => $_FILES['imagename']['name'],
+        'f_name' => $_POST['firstname'],
+        'l_name' => $_POST['lastname'],
+        'age' => $_POST['age'],
+        'emailId' => $_POST['email'],
+        'phone' => $_POST['phone'],
+        'gender' => $_POST['gender']
+    );
+    $insertId = $database->insert($table, $values);
+    if ($insertId) {
+        $message = 'Your Record Added successfully';
+        $color = 'success';
+        header("location: user-view.php?message=" . urlencode($message) . "&color=$color");
+        exit();
+    } else {
+        $message = 'Your Record Not Added';
+        $color = 'danger';
+        header("location: index.php?message=" . urlencode($message) . "&color=$color");
+        exit();
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,13 +33,14 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="script.js"></script>
-  <link href="style.css" rel="stylesheet" > 
+    <link href="style.css" rel="stylesheet">
 </head>
+
 <body>
     <nav>
         <a href="user-view.php" class="btn btn-primary">User-List</a>
     </nav>
-    <form method="post" action="Form-submit-db.php" enctype="multipart/form-data" class="container mt-5" id="myForm">
+    <form method="post" enctype="multipart/form-data" class="container mt-5" id="myForm">
         <div class="text-center"></div>
         <div class="form-group">
             <label for="imagename">Image</label>

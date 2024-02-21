@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -52,6 +51,7 @@
                 var page_id = $(this).attr("id");
                 loadsearch(page_id);
             });
+
             // user-view load code 
             function loadTable(page) {
                 $.ajax({
@@ -65,7 +65,6 @@
                     }
                 });
             }
-
             loadTable();
             // pagination for user-view
             $(document).on("click", "#pagination a", function(e) {
