@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,31 +9,56 @@
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="script.js"></script>
+    <script src="Untitled-1.js"></script>
     <link href="style.css" rel="stylesheet">
-</head>
-<body>
 
-<div class="modal" id="modal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <!-- Content will be loaded dynamically here -->
+</head>
+
+<body>
+    <nav>
+        <a href="index.php" class="btn btn-primary">Create-User</a>
+    </nav>
+    <form method="GET">
+        <div id="search" style="position: absolute; right: 80px; top: 5px; margin-right: 10px;">
+            <label>Search</label>
+            <input type="text" name="q" id="searchInput" autocomplete="off">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+        <button class="btn btn-warning" id="resetButton" style="position: absolute; right: 10px; top: 2px; margin-right: 10px;">Reset</button>
+    </form>
+    <div class="modal" id="modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            </div>
         </div>
     </div>
-</div>
+</body>
+
+</html>
 
 <?php
 include 'main_db.php';
 $database = new Database();
 $limit = 5;
-$rows = '*';
 $table = 'studentrecord';
-$result = $database->Select($table, $rows, $limit);
-$output = "";
-$sno = 1;
-
+if (isset($_GET['q']) && !empty($_GET['q'])) {
+    $searchKeyword = $_GET['q'];
+    $searchColumns = array('f_name', 'l_name', 'phone');
+    $currentPage = isset($_GET['page']) ? $_GET['page'] : 1; 
+    $searchResult = $database->search($table, $searchColumns, $searchKeyword, $currentPage, $limit);
+    $result = $searchResult['results'];
+} else {
+    $rows = '*';
+    $result = $database->select($table, $rows, $limit);
+}
+$sno = 1; 
+if (isset($_GET['page']) && $_GET['page'] > 1) {
+    $sno = ($_GET['page'] - 1) * $limit + 1;
+}
 if (!empty($result)) {
-    echo "<table class='table table-bordered table-dark'>
+    ?>
+    <center><?php include 'message.php'?></center>
+    <?php echo "<table class='table table-bordered table-dark'>
             <tr class='table-info'>
                 <th scope='col'>S.no</th>
                 <th scope='col'>Name</th>
@@ -43,7 +69,6 @@ if (!empty($result)) {
                 <th scope='col'>Image</th>
                 <th scope='col'>Action</th>
             </tr>";
-
     while ($row = mysqli_fetch_assoc($result)) {
         echo "<tr>
                 <td scope='row'>$sno</td>
@@ -60,14 +85,13 @@ if (!empty($result)) {
             </tr>";
         $sno++;
     }
-
     echo "</table>";
-
-    echo "<div class='center'>" . $database->pagination($table, $limit) . "</div>";
+    if (isset($searchKeyword)) {
+        echo "<div class='center'>" . $searchResult['pagination'] . "</div>"; 
+    } else {
+        echo "<div class='center'>" . $database->pagination($table, $limit) . "</div>";
+    }
 } else {
     echo "<h2>No Record Found.</h2>";
 }
 ?>
-
-</body>
-</html>

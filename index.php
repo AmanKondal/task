@@ -16,7 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($insertId) {
         $message = 'Your Record Added successfully';
         $color = 'success';
-        header("location: user-view.php?message=" . urlencode($message) . "&color=$color");
+        header("location: user-view-db.php?message=" . urlencode($message) . "&color=$color");
         exit();
     } else {
         $message = 'Your Record Not Added';
@@ -32,13 +32,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script src="script.js"></script>
+    <script src="Untitled-1.js"></script>
     <link href="style.css" rel="stylesheet">
 </head>
 
 <body>
     <nav>
-        <a href="user-view.php" class="btn btn-primary">User-List</a>
+        <a href="user-view-db.php" class="btn btn-primary">User-List</a>
     </nav>
     <form method="post" enctype="multipart/form-data" class="container mt-5" id="myForm">
         <div class="text-center"></div>

@@ -8,7 +8,7 @@ if ($updateid) {
     if ($result && mysqli_num_rows($result) > 0) {
         $row = mysqli_fetch_assoc($result);
         ?>
-        <form method="post" enctype="multipart/form-data" class="container mt-5" id="myForm">
+        <form method="post" enctype="multipart/form-data" action="update-db.php" class="container mt-5" id="myForm">
             <div class="text-center"></div>
             <div class="form-group">
                 <label for="imagename">Image</label>
@@ -60,44 +60,4 @@ if ($updateid) {
     }
 }
 ?>
-
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script>
-    $("#myForm").submit(function (e) {
-        e.preventDefault();
-        $(".error-message").remove();
-        var fd = new FormData($("#myForm")[0]);
-        var imageInput = $('#imagename')[0];
-        var image = imageInput.files[0];
-
-        if (!imageInput.value) {
-            var existingImage = $("#existing_image").val();
-            fd.set('imagename', existingImage);
-        }
-        fd.append('id', "<?php echo isset($row['id']) ? $row['id'] : ''; ?>");
-        fd.append('firstname', $("#firstname").val());
-        fd.append('lastname', $("#lastname").val());
-        fd.append('age', $("#age").val());
-        fd.append('email', $("#email").val());
-        fd.append('phone', $("#phone").val());
-        fd.append('gender', $("input[name='gender']:checked").val());
-
-        $.ajax({
-            url: "main_db.php",
-            type: "POST",
-            data: fd,
-            processData: false,
-            contentType: false,
-            success: function (data) {
-                console.log("AJAX Success:", data);
-                if (data) {
-                    alert("Record updated successfully!");
-                    window.location.href = 'user-view.php';
-                } else {
-                    alert("Can't save Record.");
-                    window.location.href = 'user-view.php'; 
-                }
-            }
-        });
-    });
-</script>

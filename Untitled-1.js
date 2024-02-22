@@ -46,4 +46,52 @@ $(document).ready(function() {
         });
     });
     
-    
+
+    //Delete Code
+        $(document).on("click", ".btn.btn-danger", function() {
+            var confirmDelete = confirm("Do You Really want to Delete this record ?")
+            var userId = $(this).data("id");
+            var element = this;
+            if (confirmDelete) {
+                $.ajax({
+                    url: "Delete.php",
+                    type: "POST",
+                    data: {
+                        id: userId
+                    },
+                    success: function(data) {
+                        if (data == 1) {
+                            $(element).closest("tr").fadeOut();
+                            window.location.href = 'user-view-db.php';
+                        } else {
+                            $("#error-message").html("can't Delete Record.").slideDown();
+                            $("#success-message").slideUp();
+                        }
+                    }
+                })
+            }
+        });
+        // Edit Code
+        $(document).on("click", ".btn.btn-success", function() {
+            var confirmEdit = confirm("Do You Really want to Update this record ?")
+            var updateId = $(this).data("eid");
+            console.log(updateId);
+            if (confirmEdit) {
+                $.ajax({
+                    url: "update.php",
+                    type: "POST",
+                    data: {
+                        id: updateId
+                    },
+                    success: function(data) {
+                        $("#modal .modal-content").html(data);
+                        $("#modal").modal("show");
+                    }
+                });
+            }
+        });
+  // Rest Code 
+  $("#resetButton").click(function() {
+    $("#searchInput").val('');
+    window.location.href = 'user-view-db.php';   
+});
