@@ -21,7 +21,24 @@ class Database
         }
     }
     //Select Function
-    public function select($table, $rows = '*', $limit = null, $where = null)
+    public function select($table, $rows = '*', $limit = null, $page = 1, $where = null)
+    {
+        $offset = ($page - 1) * $limit;
+        $sql = "SELECT $rows FROM $table";
+        if ($where !== null) {
+            $sql .= " WHERE $where";
+        }
+        if ($limit !== null) {
+            $sql .= " LIMIT $offset, $limit";
+        }
+        $query = $this->conn->query($sql);
+        if ($query) {
+            return $query;
+        } else {
+            return false;
+        }
+    } 
+    public function UpdateSelect($table, $rows = '*', $limit = null, $where = null)
     {
         $sql = "SELECT $rows FROM $table";
         if ($where !== null) {
@@ -43,38 +60,6 @@ class Database
             return false;
         }
     }
-
-    // Pagination  function
-    public function pagination($table, $limit = null, $where = null)
-    {
-        if ($limit != null) {
-            $sql = "SELECT COUNT(*) FROM $table";
-            if ($where != null) {
-                $sql .= " WHERE $where";
-            }
-            $query = $this->conn->query($sql);
-            $total_record = $query->fetch_array()[0];
-            $total_page = ceil($total_record / $limit);
-            $url = $_SERVER['PHP_SELF'] . '?' . http_build_query($_GET);
-            $output = "<ul class='pagination'>";
-            $currentPage = isset($_GET['page']) ? $_GET['page'] : 1;
-            if ($currentPage > 1) {
-                $output .= "<li class='page-item'><a class='page-link' href='$url&page=" . ($currentPage - 1) . "'>Previous</a></li>";
-            }
-            for ($i = 1; $i <= $total_page; $i++) {
-                $class_name = ($i == $currentPage) ? "active" : "";
-                $output .= "<li class='page-item $class_name'><a class='page-link' href='$url&page=$i'>{$i}</a></li>";
-            }
-            if ($currentPage < $total_page) {
-                $output .= "<li class='page-item'><a class='page-link' href='$url&page=" . ($currentPage + 1) . "'>Next</a></li>";
-            }
-            $output .= "</ul>";
-            return $output;
-        } else {
-            return false;
-        }
-    }
-
     //update Function 
     public function update($table, $values = array(), $where = null)
     {
@@ -120,35 +105,52 @@ class Database
             return false;
         }
     }
-// Search function with pagination 
-public function search($table, $columns, $keyword, $currentPage = 1, $limit = null)
-{
-    if ($limit != null) {
-        $countSql = "SELECT COUNT(*) FROM $table WHERE ";
-        $conditions = array();
-        foreach ($columns as $column) {
-            $conditions[] = "$column LIKE '%$keyword%'";
-        }
-        $countSql .= implode(" OR ", $conditions);
-        $query = $this->conn->query($countSql);
-        $totalRecords = $query->fetch_array()[0];
-        $total_page = ceil($totalRecords / $limit);
-        $offset = ($currentPage - 1) * $limit;
-        $searchSql = "SELECT * FROM $table WHERE ";
-        $searchSql .= implode(" OR ", $conditions);
-        $searchSql .= " LIMIT $offset, $limit";
-
-        $query = $this->conn->query($searchSql);
-        if ($query) {
-            $paginationLinks = $this->pagination($table, $limit, implode(" OR ", $conditions));
-            return array('results' => $query, 'pagination' => $paginationLinks);
+    public function search($table, $columns, $keyword, $currentPage = 1, $limit = null)
+    {
+        if ($limit != null) {
+            $countSql = "SELECT COUNT(*) FROM $table WHERE ";
+            $conditions = array();
+            foreach ($columns as $column) {
+                $conditions[] = "$column LIKE '%$keyword%'";
+            }
+            $countSql .= implode(" OR ", $conditions);
+            
+            $query = $this->conn->query($countSql);
+            $totalRecords = $query->fetch_array()[0];
+            $total_page = ceil($totalRecords / $limit);
+            $offset = ($currentPage - 1) * $limit;
+            
+            $searchSql = "SELECT * FROM $table WHERE ";
+            $searchSql .= implode(" OR ", $conditions);
+            $searchSql .= " LIMIT $offset, $limit";
+    
+            $query = $this->conn->query($searchSql);
+            if ($query) {
+                return $query; 
+            } else {
+                return false;
+            }
         } else {
-            return false;
+            return false; 
         }
-    } else {
-        return false; 
     }
-}    
+    public function count($table, $columns = null, $keyword = null) {
+        if ($columns !== null && $keyword !== null) {
+            $conditions = array();
+            foreach ($columns as $column) {
+                $conditions[] = "$column LIKE '%$keyword%'";
+            }
+            $whereClause = implode(" OR ", $conditions);
+            $sql = "SELECT COUNT(*) AS total FROM $table WHERE $whereClause";
+        } else {
+            $sql = "SELECT COUNT(*) AS total FROM $table";
+        }
+    
+        $query = $this->conn->query($sql);
+        $result = $query->fetch_assoc();
+        return $result['total'];
+    }
+    
     //Close mysqli    
     public function __destruct()
     {

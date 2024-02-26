@@ -3,7 +3,7 @@ include 'main_db.php';
 $database = new Database();
 $updateid = isset($_POST["id"]) ? $_POST["id"] : null;
 $table = 'studentrecord';
-$result = $database->select($table, '*', null, "id = '$updateid'");
+$result = $database->UpdateSelect($table, '*', null, "id = '$updateid'");
 if ($updateid) {
     if ($result && mysqli_num_rows($result) > 0) {
         $row = mysqli_fetch_assoc($result);

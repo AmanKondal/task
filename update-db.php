@@ -39,12 +39,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($result !== false) {
         $message = "Your Record For $firstname $lastname Updated successfully";
         $color = 'success';
-        header("location: user-view-db.php?message=" . urlencode($message) . "&color=$color");
+        header("location: user-view.php?message=" . urlencode($message) . "&color=$color");
         exit();
     } else {
         $message = "Your Record For $firstname Don't Updated ";
         $color = 'danger';
-        header("location: user-view-db.php?message=" . urlencode($message) . "&color=$color");
+        header("location: user-view.php?message=" . urlencode($message) . "&color=$color");
         exit();
     }
 }

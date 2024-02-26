@@ -16,7 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($insertId) {
         $message = 'Your Record Added successfully';
         $color = 'success';
-        header("location: user-view-db.php?message=" . urlencode($message) . "&color=$color");
+        header("location: user-view.php?message=" . urlencode($message) . "&color=$color");
         exit();
     } else {
         $message = 'Your Record Not Added';
@@ -38,7 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <body>
     <nav>
-        <a href="user-view-db.php" class="btn btn-primary">User-List</a>
+        <a href="user-view.php" class="btn btn-primary">User-List</a>
     </nav>
     <form method="post" enctype="multipart/form-data" class="container mt-5" id="myForm">
         <div class="text-center"></div>

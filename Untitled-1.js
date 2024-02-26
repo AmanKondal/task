@@ -62,7 +62,7 @@ $(document).ready(function() {
                     success: function(data) {
                         if (data == 1) {
                             $(element).closest("tr").fadeOut();
-                            window.location.href = 'user-view-db.php';
+                            window.location.href = 'user-view.php';
                         } else {
                             $("#error-message").html("can't Delete Record.").slideDown();
                             $("#success-message").slideUp();
@@ -90,8 +90,26 @@ $(document).ready(function() {
                 });
             }
         });
-  // Rest Code 
-  $("#resetButton").click(function() {
-    $("#searchInput").val('');
-    window.location.href = 'user-view-db.php';   
-});
+ 
+
+
+// function loadTable(page) {
+//     $.ajax({
+//         url: "user-view-db.php",
+//         type: "POST",
+//         data: {
+//             page_no: page
+//         },
+//         success: function(data) {
+//             $("#table-data").html(data);
+//         }
+//     });
+// }
+
+// loadTable();
+// // pagination for user-view
+// $(document).on("click", "#pagination a", function(e) {
+//     e.preventDefault();
+//     var page_id = $(this).attr("id");
+//     loadTable(page_id);
+// });
