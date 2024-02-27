@@ -23,35 +23,13 @@ class Database
     //Select Function
     public function select($table, $rows = '*', $limit = null, $page = 1, $where = null)
     {
-        $offset = ($page - 1) * $limit;
         $sql = "SELECT $rows FROM $table";
         if ($where !== null) {
             $sql .= " WHERE $where";
         }
         if ($limit !== null) {
+            $offset = ($page - 1) * $limit;
             $sql .= " LIMIT $offset, $limit";
-        }
-        $query = $this->conn->query($sql);
-        if ($query) {
-            return $query;
-        } else {
-            return false;
-        }
-    } 
-    public function UpdateSelect($table, $rows = '*', $limit = null, $where = null)
-    {
-        $sql = "SELECT $rows FROM $table";
-        if ($where !== null) {
-            $sql .= " WHERE $where";
-        }
-        if ($limit !== null) {
-            if (isset($_GET['page'])) {
-                $page = $_GET['page'];
-            } else {
-                $page = 1;
-            }
-            $start = ($page - 1) * $limit;
-            $sql .= " LIMIT $start,$limit";
         }
         $query = $this->conn->query($sql);
         if ($query) {
@@ -65,35 +43,24 @@ class Database
     {
         if (empty($values)) {
             return false;
-        }    
+        }
         $setValues = array();
-        $bindTypes = '';
-        $bindValues = array();
-    
         foreach ($values as $key => $value) {
-            $setValues[] = "$key=?";
-            $bindTypes .= 's';    
-            $bindValues[] = $value;
+            $setValues[] = "$key='" . $this->conn->real_escape_string($value) . "'";
         }
         $setClause = implode(', ', $setValues);
         $sql = "UPDATE $table SET $setClause";
         if ($where !== null) {
             $sql .= " WHERE $where";
         }
-        $stmt = $this->conn->prepare($sql);
-        if ($stmt === false) {
-            return false;
-        }
-        if (!empty($bindValues)) {
-            $stmt->bind_param($bindTypes, ...$bindValues);
-        }
-        if ($stmt->execute()) {
-            return $stmt->affected_rows;
+        $query = $this->conn->query($sql);
+        if ($query) {
+            return $this->conn->affected_rows;
         } else {
             return false;
         }
     }
-    
+
     // Delete function
     public function deleteRecord($table, $id)
     {
@@ -105,36 +72,28 @@ class Database
             return false;
         }
     }
-    public function search($table, $columns, $keyword, $currentPage = 1, $limit = null)
+    // Search
+    public function search($table, $columns, $keyword, $limit = null)
     {
-        if ($limit != null) {
-            $countSql = "SELECT COUNT(*) FROM $table WHERE ";
+        if ($limit !== null) {
             $conditions = array();
             foreach ($columns as $column) {
                 $conditions[] = "$column LIKE '%$keyword%'";
             }
-            $countSql .= implode(" OR ", $conditions);
-            
-            $query = $this->conn->query($countSql);
-            $totalRecords = $query->fetch_array()[0];
-            $total_page = ceil($totalRecords / $limit);
-            $offset = ($currentPage - 1) * $limit;
-            
-            $searchSql = "SELECT * FROM $table WHERE ";
-            $searchSql .= implode(" OR ", $conditions);
-            $searchSql .= " LIMIT $offset, $limit";
-    
+            $searchSql = "SELECT * FROM $table WHERE " . implode(" OR ", $conditions) . " LIMIT $limit";
             $query = $this->conn->query($searchSql);
             if ($query) {
-                return $query; 
+                return $query;
             } else {
                 return false;
             }
         } else {
-            return false; 
+            return false;
         }
     }
-    public function count($table, $columns = null, $keyword = null) {
+    // Count Function
+    public function count($table, $columns = null, $keyword = null)
+    {
         if ($columns !== null && $keyword !== null) {
             $conditions = array();
             foreach ($columns as $column) {
@@ -145,12 +104,12 @@ class Database
         } else {
             $sql = "SELECT COUNT(*) AS total FROM $table";
         }
-    
+
         $query = $this->conn->query($sql);
         $result = $query->fetch_assoc();
         return $result['total'];
     }
-    
+
     //Close mysqli    
     public function __destruct()
     {

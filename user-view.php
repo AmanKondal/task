@@ -43,12 +43,11 @@
                     }
                 });
             }
-            
             $(document).on("keyup", "#searchInput", function() {
                 loadsearch();
             });
             // code for pagination search
-            $(document).on("click", ".pagination a", function(e) {
+            $(document).on("click", ".Search-item a", function(e) {
                 e.preventDefault();
                 var page_id = $(this).attr("id");
                 loadsearch(page_id);
@@ -67,15 +66,13 @@
                     }
                 });
             }
-
             loadTable();
             // pagination for user-view
-            $(document).on("click", ".pagination a", function(e) {
+            $(document).on("click", ".page-item a", function(e) {
                 e.preventDefault();
                 var page_id = $(this).attr("id");
                 loadTable(page_id);
-            });
-            
+            });            
             // Rest Code 
             $("#resetButton").click(function() {
                 $("#searchInput").val('');
