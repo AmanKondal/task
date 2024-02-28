@@ -62,7 +62,6 @@ $(document).ready(function() {
                     success: function(data) {
                         if (data == 1) {
                             $(element).closest("tr").fadeOut();
-                            window.location.href = 'user-view.php';
                         } else {
                             $("#error-message").html("can't Delete Record.").slideDown();
                             $("#success-message").slideUp();

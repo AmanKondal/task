@@ -6,8 +6,7 @@ if (isset($_POST['id'])) {
     $id = $_POST['id'];
     $deleted = $database->deleteRecord($table, $id);
     if ($deleted) {
-        echo 1;
-        
+        echo 1;     
     } else {
         echo 0;
     }
