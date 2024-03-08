@@ -45,3 +45,17 @@ $(document).ready(function() {
             }
         });
     });
+
+    // $(document).ready(function() {
+    //     $('#myForm').submit(function(event) {
+    //         var requiredFields = ['email', 'password', 'confirm_password'];
+    //         $.each(requiredFields, function(index, fieldName) {
+    //             var inputField = $('#' + fieldName);
+    //             if (inputField.val().trim() === '') {
+    //                 inputField.after('<div class="error-message">Please enter ' + fieldName.replace('_', ' ') + '.</div>');
+    //                 event.preventDefault(); // Prevent form submission if fields are empty
+    //             }
+    //         });
+    //     });
+    // });
+    
