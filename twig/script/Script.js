@@ -1,8 +1,8 @@
 $(document).ready(function () {
-    // user-view load code 
+    // Function to load table data
     function loadTable(page) {
         $.ajax({
-            url: "user-view-list.php",
+            url: "userViewList.php",
             type: "POST",
             data: {
                 page_no: page
@@ -12,20 +12,22 @@ $(document).ready(function () {
             }
         });
     }
+
+    // Load table data initially
     loadTable();
 
-    // pagination for user-view
-    $(document).on("click", ".page-item a", function (e) {
+    // Pagination for user-view
+    $(document).on("click", ".page-link a", function (e) {
         e.preventDefault();
         var page_id = $(this).attr("id");
         loadTable(page_id);
     });
 
     // Search code
-    function loadsearch(page) {
+    function loadSearch(page) {
         var search_term = $("#searchInput").val();
         $.ajax({
-            url: "user-view-list.php",
+            url: "userViewList.php",
             type: "POST",
             data: {
                 search: search_term,
@@ -33,37 +35,61 @@ $(document).ready(function () {
             },
             success: function (data) {
                 $("#table-data").html(data);
-
             }
         });
     }
+
     // Trigger search on keyup
     $(document).on("keyup", "#searchInput", function () {
-        loadsearch();
+        loadSearch();
     });
 
-    // code for pagination search
-    $(document).on("click", ".Search-item a", function (e) {
+    // Code for pagination search
+    $(document).on("click", ".page-item a", function (e) {
         e.preventDefault();
         var page_id = $(this).attr("id");
-        loadsearch(page_id);
+        loadSearch(page_id);
     });
 
-    // Rest Code 
+    // Reset button code
     $("#resetButton").click(function () {
         $("#searchInput").val('');
         loadTable();
     });
+
+    // Sort table code
+    $(document).on("change", "#sort-order", function () {
+        var sortOrder = $(this).val();
+        sortTable(sortOrder);
+    });
+
+    function sortTable(order) {
+        var currentPage = $("#current_page").val(); 
+        $.ajax({
+            url: "adminUserList.php",
+            type: "POST",
+            data: {
+                page_no: currentPage,
+                sort_order: order
+            },
+            success: function (data) {
+                $("#table-data").html(data);
+            }
+        });
+    }
+});
+$(document).on("click", "#sorting a", function (e) {
+    e.preventDefault();
+    var page_id = $(this).attr("id");
+    sortTable(page_id);
 });
 
-// Edit Code
-$(document).on("click", ".btn.btn-success", function () {
-    var confirmEdit = confirm("Do You Really want to See User  ?")
-    var updateId = $(this).data("eid");
-    console.log(updateId);
-    if (confirmEdit) {
+// view
+$(document).ready(function () {
+    $(document).on("click", ".btn.btn-info", function () {
+        var updateId = $(this).data("eid");
         $.ajax({
-            url: "user-data.php",
+            url: "viewUserData.php",
             type: "POST",
             data: {
                 id: updateId
@@ -73,7 +99,5 @@ $(document).on("click", ".btn.btn-success", function () {
                 $("#modal").modal("show");
             }
         });
-    }
+    });
 });
-
-

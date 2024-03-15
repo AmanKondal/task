@@ -1,8 +1,8 @@
 $(document).ready(function () {
-    // user-view load code 
+    // Function to load table data
     function loadTable(page) {
         $.ajax({
-            url: "admin-view-list.php",
+            url: "adminUserList.php",
             type: "POST",
             data: {
                 page_no: page
@@ -12,20 +12,22 @@ $(document).ready(function () {
             }
         });
     }
+
+    // Load table data initially
     loadTable();
 
-    // pagination for user-view
-    $(document).on("click", ".page-item a", function (e) {
+    // Pagination for user-view
+    $(document).on("click", ".page-link a", function (e) {
         e.preventDefault();
         var page_id = $(this).attr("id");
         loadTable(page_id);
     });
 
     // Search code
-    function loadsearch(page) {
+    function loadSearch(page) {
         var search_term = $("#searchInput").val();
         $.ajax({
-            url: "admin-view-list.php",
+            url: "adminUserList.php",
             type: "POST",
             data: {
                 search: search_term,
@@ -33,36 +35,36 @@ $(document).ready(function () {
             },
             success: function (data) {
                 $("#table-data").html(data);
-         
             }
         });
     }
+
     // Trigger search on keyup
     $(document).on("keyup", "#searchInput", function () {
-        loadsearch();
-    });
-    
-    // code for pagination search
-    $(document).on("click", ".Search-item a", function (e) {
-        e.preventDefault();
-        var page_id = $(this).attr("id");
-        loadsearch(page_id);
+        loadSearch();
     });
 
-    // Rest Code 
+    // Code for pagination search
+    $(document).on("click", ".page-item a", function (e) {
+        e.preventDefault();
+        var page_id = $(this).attr("id");
+        loadSearch(page_id);
+    });
+
+    // Reset button code
     $("#resetButton").click(function () {
         $("#searchInput").val('');
         loadTable();
     });
 
-    //Delete Code
+    // Delete code
     $(document).on("click", ".btn.btn-danger", function () {
         var confirmDelete = confirm("Do You Really want to Delete this record ?");
         var userId = $(this).data("id");
         var element = this;
         if (confirmDelete) {
             $.ajax({
-                url: "admin-view.php",
+                url: "adminUserList.php",
                 type: "POST",
                 data: {
                     id: userId
@@ -82,26 +84,69 @@ $(document).ready(function () {
             });
         }
     });
-});
 
-// View  Code
-$(document).on("click", ".btn.btn-info", function () {
-    var confirmEdit = confirm("Do You Really want to See this record ?")
-    var updateId = $(this).data("eid");
-    if (confirmEdit) {
+    // Sort table code
+    $(document).on("change", "#sort-order", function () {
+        var sortOrder = $(this).val();
+        sortTable(sortOrder);
+    });
+
+    function sortTable(order) {
+        var currentPage = $("#current_page").val(); 
         $.ajax({
-            url: "view-update-user.php",
+            url: "adminUserList.php",
             type: "POST",
             data: {
-                id: updateId
+                page_no: currentPage,
+                sort_order: order
             },
             success: function (data) {
-                console.log(data)
-                $("#modal .modal-content").html(data);
-                $("#modal").modal("show");
+                $("#table-data").html(data);
             }
         });
     }
 });
+$(document).on("click", "#sorting a", function (e) {
+    e.preventDefault();
+    var page_id = $(this).attr("id");
+    sortTable(page_id);
+});
+
+// // view
+// $(document).ready(function () {
+//     $(document).on("click", ".btn.btn-info", function () {
+//         var updateId = $(this).data("eid");
+//         $.ajax({
+//             url: "viewUserData.php",
+//             type: "POST",
+//             data: {
+//                 id: updateId
+//             },
+//             success: function (data) {
+//                 console.log(updateId);
+//                 $('.modal-content').html(data);
+//                 $('#userData').modal('show');
+//             }
+//         });
+//     });
+// });
 
 
+// view
+// $(document).ready(function () {
+//     $('view_data').click(function (e){
+//         e.preventDefault();
+//         var updateId = $(this).data("eid");
+//         $.ajax({
+//             url: "viewUserData.php",
+//             type: "POST",
+//             data: {
+//                 id: updateId
+//             },
+//             success: function (respone) {
+//                 $('.modal-content').html(respone);
+//                 $('#userData').modal('show');
+//             }
+//         });
+//         });
+// });
