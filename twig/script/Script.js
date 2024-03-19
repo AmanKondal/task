@@ -64,7 +64,7 @@ $(document).ready(function () {
     });
 
     function sortTable(order) {
-        var currentPage = $("#current_page").val(); 
+        var currentPage = $("#current_page").val();
         $.ajax({
             url: "adminUserList.php",
             type: "POST",
@@ -89,7 +89,7 @@ $(document).ready(function () {
     $(document).on("click", ".btn.btn-info", function () {
         var updateId = $(this).data("eid");
         $.ajax({
-            url: "viewUserData.php",
+            url: "UserData.php",
             type: "POST",
             data: {
                 id: updateId
@@ -97,6 +97,26 @@ $(document).ready(function () {
             success: function (data) {
                 $("#modal .modal-content").html(data);
                 $("#modal").modal("show");
+            }
+        });
+    });
+});
+
+
+
+$(document).ready(function () {
+    $('#email').blur(function () {
+        var email = $(this).val();
+        $.ajax({
+            type: 'POST',
+            url: 'signUp.php',
+            data: { email: email },
+            success: function (response) {
+                if (response === 'exists') {
+                    $('#email-error').text('Email already exists');
+                } else {
+                    $('#email-error').text('');
+                }
             }
         });
     });

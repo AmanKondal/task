@@ -19,13 +19,13 @@ class dataBase
     }
     // Login Code
     public function loginSession()
-{
-    session_start();
-    if (!isset($_SESSION['email'])) {
-        header("location: ../../index.php");
-        exit;
+    {
+        session_start();
+        if (isset($_SESSION['email'])) {
+            header("location: ../../index.php");
+            exit;
+        }
     }
-}
 
     public function noLoginSession()
     {
@@ -147,13 +147,57 @@ class dataBase
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Delete user
+    // Email check 
+    public function getUserByEmail($email)
+    {
+        try {
+            $query = "SELECT * FROM user WHERE email = :email";
+            $stmt = $this->pdo->prepare($query);
+            $stmt->execute(array(':email' => $email));
+
+            if ($stmt->rowCount() > 0) {
+                return $stmt->fetch(PDO::FETCH_ASSOC);
+            } else {
+                return null; 
+            }
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return null;
+        }
+    }
+
+
+    // Regster User
+    public function registerUser(array $values = array())
+    {
+        $columns = implode(', ', array_keys($values));
+        $placeholders = implode(', ', array_fill(0, count($values), '?'));
+        $sql = "INSERT INTO user ($columns) VALUES ($placeholders)";
+        $stmt = $this->pdo->prepare($sql);
+        if ($stmt === false) {
+            throw new Exception("Failed to prepare statement: " . $this->pdo->errorInfo()[2]);
+        }
+        try {
+            $stmt->execute(array_values($values));
+            return $this->pdo->lastInsertId();
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return false;
+        }
+    }
+
+
     public function deleteUser($id)
     {
-        $sql = "DELETE FROM user WHERE uid = ?";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$id]);
-        return $stmt->rowCount() > 0;
+        try {
+            $sql = "DELETE FROM user WHERE uid = ?";
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([$id]);
+            return $stmt->rowCount() > 0;
+        } catch (PDOException $e) {
+            error_log("Error deleting user: " . $e->getMessage());
+            return false;
+        }
     }
-    
+
 }

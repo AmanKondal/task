@@ -42,8 +42,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($existing_image && file_exists('uploads/' . $existing_image)) {
             unlink('uploads/' . $existing_image);
         }
-        var_dump($result);
-        exit;
     } else {
         $result = $database->updateUser( array(
             'f_name' => $firstname,
@@ -62,10 +60,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         ), "uid = '$id'");
     }
 
-    if ($result !== false) {
-        $message = "Your Record For $firstname $lastname Updated successfully";
-        $color = 'success';
-        header("location:adminView.php?message=" . urlencode($message) . "&color=$color");
+    if ($result) {
+echo 1;
         exit();
     } else {
         $message = "Your Record For $firstname Don't Updated ";

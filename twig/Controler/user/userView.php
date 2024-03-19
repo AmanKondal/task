@@ -7,6 +7,5 @@ $loader = new Twig\Loader\FilesystemLoader([
 ]);
 $database = new Database();
 $twig = new Twig\Environment($loader);
-$database->loginSession();
 echo $twig->render('userView.twig');
 ?>

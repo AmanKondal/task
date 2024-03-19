@@ -57,14 +57,15 @@ $(document).ready(function () {
         loadTable();
     });
 
-    // Delete code
+
+    // Delete Button
     $(document).on("click", ".btn.btn-danger", function () {
         var confirmDelete = confirm("Do You Really want to Delete this record ?");
         var userId = $(this).data("id");
         var element = this;
         if (confirmDelete) {
             $.ajax({
-                url: "adminUserList.php",
+                url: "delete.php",
                 type: "POST",
                 data: {
                     id: userId
@@ -73,17 +74,20 @@ $(document).ready(function () {
                     console.log("UserID:", userId);
                     if (data == 1) {
                         $(element).closest("tr").fadeOut();
+                        showToast("Record deleted successfully", "success");
+
                     } else {
-                        $("#error-message").html("can't Delete Record.").slideDown();
-                        $("#success-message").slideUp();
+                        showToast("Failed to delete record", "error");
                     }
                 },
-                complete: function () {
-                    loadTable();
-                }
+                error: function () {
+                    showToast("Error deleting record", "error");
+                },
             });
         }
     });
+
+
 
     // Sort table code
     $(document).on("change", "#sort-order", function () {
@@ -91,8 +95,15 @@ $(document).ready(function () {
         sortTable(sortOrder);
     });
 
+    $(document).on("click", ".Sorting a", function (e) {
+        e.preventDefault();
+        var page_id = $(this).attr("id");
+        sortTable(page_id);
+    });
+
+    // Function to sort table
     function sortTable(order) {
-        var currentPage = $("#current_page").val(); 
+        var currentPage = $("#current_page").val();
         $.ajax({
             url: "adminUserList.php",
             type: "POST",
@@ -106,47 +117,39 @@ $(document).ready(function () {
         });
     }
 });
-$(document).on("click", "#sorting a", function (e) {
-    e.preventDefault();
-    var page_id = $(this).attr("id");
-    sortTable(page_id);
+
+
+
+$(document).on("click", ".btn.btn-primary", function () {
+    $.ajax({
+        url: "userUpdate.php",
+        type: "POST",
+        data: $("#myForm").serialize(),
+        success: function (respone) {
+            console.log(respone);
+            if (data == 1) {
+                showToast("Record Update successfully", "success");
+            } else {
+                showToast("Failed to Update record", "error");
+            }
+        },
+        error: function () {
+            showToast("Error in Updating record", "error");
+        },
+    });
 });
-
-// // view
-// $(document).ready(function () {
-//     $(document).on("click", ".btn.btn-info", function () {
-//         var updateId = $(this).data("eid");
-//         $.ajax({
-//             url: "viewUserData.php",
-//             type: "POST",
-//             data: {
-//                 id: updateId
-//             },
-//             success: function (data) {
-//                 console.log(updateId);
-//                 $('.modal-content').html(data);
-//                 $('#userData').modal('show');
-//             }
-//         });
-//     });
-// });
-
-
-// view
-// $(document).ready(function () {
-//     $('view_data').click(function (e){
-//         e.preventDefault();
-//         var updateId = $(this).data("eid");
-//         $.ajax({
-//             url: "viewUserData.php",
-//             type: "POST",
-//             data: {
-//                 id: updateId
-//             },
-//             success: function (respone) {
-//                 $('.modal-content').html(respone);
-//                 $('#userData').modal('show');
-//             }
-//         });
-//         });
-// });
+function showToast(message, type) {
+    var toastElement = $(".toast");
+    var toastBody = $(".toast-body");
+    toastBody.text(message);
+    toastElement.removeClass("bg-success bg-error");
+    if (type === "success") {
+        toastElement.addClass("bg-success");
+    } else if (type === "error") {
+        toastElement.addClass("bg-error");
+    }
+    toastElement.toast({ delay: 2000 }).toast("show");
+    setTimeout(function () {
+        toastElement.toast("hide");
+    }, 5000);
+}

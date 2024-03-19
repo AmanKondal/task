@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once 'vendor/autoload.php';
 require_once 'model/user.php';
 $loader = new Twig\Loader\FilesystemLoader('view');
@@ -21,13 +22,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 'type' => $result['type'],
                 'uid' =>  $result['uid']
             ];
-            var_dump($_SESSION);
             header("Location: controler/admin/adminView.php");
             exit();
         } elseif ($result['type'] == 0) {
             $_SESSION['email'] = $result['email'];
             $_SESSION['type'] = $result['type'];
-            $_SESSION['f_name'];
             $_SESSION['uid'] = $result['uid'];
             header("Location: controler/user/userView.php");
             exit();
