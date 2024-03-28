@@ -20,54 +20,46 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $place = $_POST['place'];
     $country = $_POST['country'];
     $code = $_POST['code'];
-    if ($_FILES['imagename']['name']) {
-        $imagename = $_FILES['imagename']['name'];
-        move_uploaded_file($_FILES['imagename']['tmp_name'], 'uploads/'.$imagename);
-        $result = $database->updateUser( array(
-            'f_name' => $firstname,
-            'l_name' => $lastname,
-            'email' => $email,
-            'phone' => $phone,
-            'gender' => $gender,
-            'image' => $imagename,
-            'father_name' => $father_name,
-            'mother_name' => $mother_name,
-            'street_no' => $street_no,
-            'additional_info' => $additional_info,
-            'zip_code' => $zip_code,
-            'place' => $place,
-            'country' => $country,
-            'code' => $code,
-        ), "uid = '$id'");
-        if ($existing_image && file_exists('uploads/' . $existing_image)) {
-            unlink('uploads/' . $existing_image);
+    $imageNames = array();
+    foreach ($_FILES['imagename']['name'] as $key => $value) {
+        $name = $_FILES['imagename']['name'][$key];
+        $temp_name = $_FILES['imagename']['tmp_name'][$key];
+        $extension = pathinfo($name, PATHINFO_EXTENSION);
+        $unique_name = uniqid() . '_' . time() . '.' . $extension;
+        $folder = "../../uploads/" . $unique_name;
+        if (move_uploaded_file($temp_name, $folder)) {
+            $imageNames[] = $unique_name;
+        } else {
+            $error = 'Failed to upload some files.';
+            break;
         }
-    } else {
-        $result = $database->updateUser( array(
-            'f_name' => $firstname,
-            'l_name' => $lastname,
-            'email' => $email,
-            'phone' => $phone,
-            'gender' => $gender,
-            'father_name' => $father_name,
-            'mother_name' => $mother_name,
-            'street_no' => $street_no,
-            'additional_info' => $additional_info,
-            'zip_code' => $zip_code,
-            'place' => $place,
-            'country' => $country,
-            'code' => $code,
-        ), "uid = '$id'");
+    }
+    $update_data = array(
+        'f_name' => $firstname,
+        'l_name' => $lastname,
+        'email' => $email,
+        'phone' => $phone,
+        'gender' => $gender,
+        'father_name' => $father_name,
+        'mother_name' => $mother_name,
+        'street_no' => $street_no,
+        'additional_info' => $additional_info,
+        'zip_code' => $zip_code,
+        'place' => $place,
+        'country' => $country,
+        'code' => $code,
+        'image' => implode(",", $imageNames),
+    );
+    $result = $database->updateUser($update_data, "uid = '$id'");
+    if ($result && $existing_image && file_exists('uploads/' . $existing_image)) {
+        unlink('uploads/' . $existing_image);
     }
 
     if ($result) {
-echo 1;
+        echo 1;
         exit();
     } else {
-        $message = "Your Record For $firstname Don't Updated ";
-        $color = 'danger';
-        header("location: adminView.php?message=" . urlencode($message) . "&color=$color");
+        echo 0;
         exit();
     }
 }
-?>

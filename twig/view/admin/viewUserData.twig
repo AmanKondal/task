@@ -29,8 +29,11 @@
                                                             Image
                                                         </label>
                                                         <div class="input-group">
-                                                            <input type="file" name="imagename" id="fileToUpload" class="form-control">
-                                                            <img src='../../uploads/{{ row.image }}' name="previewImage" id="fileToUpload" alt='User Image' width='50' class="ml-2" data-existing-image=" {{ row.userimage }}">
+                                                           <input type="file" name="imagename[]" multiple accept="image/*">
+{% for img in row.image|split(',') %}
+    <img src='../../uploads/{{ img }}' alt='User Image' width='50' class="ml-2">
+    {% endfor %}
+    
                                                             <input type="hidden" name="existing_image" value="{{ row.image }}">
                                                         </div>
                                                     </div>

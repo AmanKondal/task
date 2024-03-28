@@ -46,9 +46,6 @@
                         Gender
                     </th>
                     <th scope='col'>
-                        Image
-                    </th>
-                    <th scope='col'>
                         Action
                     </th>
                 </tr>
@@ -74,10 +71,7 @@
                                     {{ row['gender'] }}
                                 </td>
                                 <td>
-                                    <img src='../../uploads/{{ row['image'] }}' alt='User Image' width='50'>
-                                </td>
-                                <td>
-                                    <button type='button' class='btn btn-info' data-eid='{{ row[' uid'] }}'>
+                                    <button type='button' class='btn btn-info' data-eid='{{ row['uid'] }}'>
                                         view
                                     </button>
                                 </td>

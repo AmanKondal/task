@@ -8,7 +8,6 @@ $(document).ready(function ($) {
                 id: updateId
             },
             success: function (data) {
-                console.log(updateId);
                 $('.modal-content').html(data);
                 $('#userData').modal('show');
             }

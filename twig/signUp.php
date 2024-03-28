@@ -1,24 +1,29 @@
-<?php
+ <?php
 require_once 'vendor/autoload.php';
 require_once 'model/user.php';
+
 $loader = new Twig\Loader\FilesystemLoader('view');
 $twig = new Twig\Environment($loader);
 $database = new Database();
 $error = '';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $value = array();
-    for ($i = 0; $i < count($_FILES['imagename']['name']); $i++) {
-        $name = $_FILES['imagename']['name'][$i];
-        $type = $_FILES['imagename']['type'][$i];
-        $temp_name = $_FILES['imagename']['tmp_name'][$i];
-        $folder = "uploads/" . $name;
-var_dump($folder);
+    $imageNames = array();
+    foreach ($_FILES['imagename']['name'] as $key => $value) {
+        $name = $_FILES['imagename']['name'][$key];
+        $temp_name = $_FILES['imagename']['tmp_name'][$key];
+        $extension = pathinfo($name, PATHINFO_EXTENSION);
+        $unique_name = uniqid() . '_' . time() . '.' . $extension;
+        $folder = "uploads/" . $unique_name;
         if (move_uploaded_file($temp_name, $folder)) {
+            $imageNames[] = $unique_name;
         } else {
             $error = 'Failed to upload some files.';
+            break;
         }
-        $value = array(
+    }
+    if (empty($error)) {
+        $userData = array(
             'f_name' => $_POST['firstname'],
             'l_name' => $_POST['lastname'],
             'father_name' => $_POST['fathername'],
@@ -33,19 +38,17 @@ var_dump($folder);
             'country' => $_POST['country'],
             'code' => $_POST['code'],
             'phone' => $_POST['phone_number'],
-            'image' => $name,
+            'image' => implode(",", $imageNames),
         );
-        var_dump($value);
-        exit;
         $email = $_POST['email'];
         $existingUser = $database->getUserByEmail($email);
         if ($existingUser) {
             $error = 'Email already exists';
         } else {
-            $insertId = $database->registerUser($value);
+            $insertId = $database->registerUser($userData);
             if ($insertId) {
                 $message = 'Your record was added successfully';
-                header("location: controler/user/userView.php?message=" . urlencode($message) . "&color=$color");
+                header("location: controler/user/userView.php?message");
                 exit;
             } else {
                 $error = "Your record couldn't be added";
