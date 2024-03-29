@@ -1,92 +1,100 @@
 <!DOCTYPE html>
 <html>
-<head>
-</head>
-<body>
-    <div class="modal" id="userData" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content"></div>
+    <head></head>
+    <body>
+<div class="modal" id="userData" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content"></div>
+    </div>
+    
         </div>
-    </div>
-    <div class="toast" role="alert" style="position: absolute; right: 80px; top: 30px; margin-right: 10px;" aria-live="assertive" aria-atomic="true">
-        <div class="toast-header"></div>
-        <div class="toast-body"></div>
-    </div>
-    <h2>Welcome {{ email }}</h2>
-{{ sortOrder }}
-    <div id="table-data">
-        <table class='table table-bordered table-dark'>
-            <tr class='table-info'>
-                <th scope='col'>S.no</th>
-                <th scope='col'>
-                    Name &nbsp;&nbsp;&nbsp;
-                    <select id="sort-order" class="btn btn-secondary">
-                        <option value="">Sorting</option>
-                        <option value="ASC">Ascending</option>
-                        <option value="DESC">Descending</option>
-                    </select>
-                </th>
-                <th scope='col'>Email-Id</th>
-                <th scope='col'>Phone-No</th>
-                <th scope='col'>Gender</th>
-                <th scope='col'>Action</th>
-            </tr>
-            <!-- Table body -->
-            <tr>
-                {% if result is not empty %}
-                    {% for row in result %}
-                        <tr>
-                            <td>{{ sno }}</td>
-                            <td>{{ row['f_name'] }} {{ row['l_name'] }}</td>
-                            <td>{{ row['email'] }}</td>
-                            <td>{{ row['phone'] }}</td>
-                            <td>{{ row['gender'] }}</td>
-                            <td>
-                                <button type='button' class='btn btn-info' data-eid='{{ row['uid'] }}'>view</button>
-                                <button type='button' class='btn btn-danger' data-id='{{ row['uid'] }}'>Delete</button>
-                            </td>
-                        </tr>
-                        {% set sno = sno + 1 %}
-                    {% endfor %}
-                {% else %}
+        <div class="toast" role="alert" style="position: absolute; right: 80px; top: 30px; margin-right: 10px;" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header"></div>
+            <div class="toast-body"></div>
+        </div>
+        <h2>
+            Welcome {{ email }}
+        </h2>
+        <div id="dataContainer">
+            <table class="table table-striped sortable">
+                <thead> 
                     <tr>
-                        <td colspan="8">
-                            <h2>No Records Found</h2>
-                        </td>
+                        <th scope="col" colorder="">
+                            Sno
+                        </th>
+                        <th scope="col" class="sorting" coltype="name" colorder="">
+                            Name
+                        </th>
+                        <th scope="col" coltype="email">
+                            Email
+                        </th>
+                        <th scope="col" coltype="email">
+                            phone-No
+                        </th>
+                        <th scope="col" coltype="email">
+                            Gender
+                        </th>
+                        <th scope="col" coltype="email">
+                            Action
+                        </th>
                     </tr>
-                {% endif %}
+                </thead>
+                <!-- Table body -->
+<!-- Table body -->
+<!-- Table body -->
+<tr>
+    {% set sno = (offset * limit) + 1 %}
+    {% if result is not empty %}
+        {% for row in result %}
+            <tr>
+                <td>
+                    {{ sno }}
+                </td>
+                <td>
+                    {{ row['f_name'] }}
+                    {{ row['l_name'] }}
+                </td>
+                <td>
+                    {{ row['email'] }}
+                </td>
+                <td>
+                    {{ row['phone'] }}
+                </td>
+                <td>
+                    {{ row['gender'] }}
+                </td>
+                <td>
+                    <button type='button' class='btn btn-info' data-eid='{{ row['uid'] }}'>
+                        view
+                                            
+                    </button>
+                    <button type='button' class='btn btn-danger' data-id='{{ row['uid'] }}'>
+                        Delete
+                                            
+                    </button>
+                </td>
             </tr>
-        </table>
-        <!-- Pagination controls -->
-<nav aria-label="Page navigation">
-    <ul class="pagination">
-        {% if total_page > 0 %}
-            {% for page_num in 1..total_page %}
-{% if searchValue != "" %}
-    <li class='page-item {% if page_num == current_page %}active{% endif %}'>
-        <a class="page-link" href="?page={{ page_num }}&search={{ searchValue }}&sortorder={{ sortOrder }}" id="{{ page_num }}">
-            {{ page_num }}
-        </a>
-    </li>
-{% else %}
-    <li class='page-item {% if page_num == current_page %}active{% endif %}'>
-        <a class="page-link" href="?page={{ page_num }}&sortorder={{ sortOrder }}" id="{{ page_num }}">
-            {{ page_num }}
-        </a>
-    </li>
-{% endif %}
-            {% endfor %}
-        {% else %}
-            <li class="page-item disabled">
-                <span class="page-link">
+            {% set sno = sno + 1 %}
+        {% endfor %}
+    {% else %}
+        <tr>
+            <td colspan="8">
+                <h2>
                     No Records Found
-                </span>
-            </li>
-        {% endif %}
-    </ul>
-</nav>
+                                    
+                </h2>
+            </td>
+        </tr>
+    {% endif %}
+</tr>
 
-    </div>
-    <script src="../../script/viewDelete.js"></script>
-</body>
+
+            </table>
+            <!-- Pagination controls -->
+<div class="pagination">
+    {{ paginationLinks | raw }}
+</div>
+        </div>
+        <script src="../../script/viewDelete.js"></script>
+    </body>
 </html>

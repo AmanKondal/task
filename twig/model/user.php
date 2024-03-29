@@ -49,11 +49,11 @@ class dataBase
         return $result;
     }
 
-    // Select user 
-    public function selectAllUser($limit = null, $page = 1)
+    // Select all user
+    public function selectAllUser($limit = null, $offset )
     {
-        $offset = ($page - 1) * $limit;
-        $sql = "SELECT * FROM user LIMIT ?, ?";
+      
+        $sql = "SELECT * FROM user ORDER BY uid ASC LIMIT ?, ?";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(1, $offset, PDO::PARAM_INT);
         $stmt->bindValue(2, $limit, PDO::PARAM_INT);
@@ -65,6 +65,7 @@ class dataBase
             return false;
         }
     }
+
 
     // user Data
     public function userData($id = null)
@@ -132,20 +133,22 @@ class dataBase
         }
     }
 
-    // Your existing code...
-    public function getUsersSorted($order, $limit)
+    public function getUsersSorted($order, $offset, $limit)
     {
         $order = strtoupper($order);
         if ($order !== 'ASC' && $order !== 'DESC') {
             throw new InvalidArgumentException("Invalid order '$order'.");
         }
-        $sql = "SELECT * FROM `user` ORDER BY f_name $order limit $limit";
-        $stmt = $this->pdo->query($sql);
-        if (!$stmt) {
-            throw new RuntimeException("Failed to execute query.");
-        }
+
+        $sql = "SELECT * FROM `user` ORDER BY f_name $order LIMIT :offset, :limit";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->execute();
+
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
 
     // Email check 
     public function getUserByEmail($email)

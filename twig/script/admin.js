@@ -1,101 +1,95 @@
-$(document).ready(function () {
-    // Function to load table data
-    function loadTable(page = 1, fn) {
-        $.ajax({
-            url: "adminUserList.php",
-            type: "POST",
-            data: {
-                page_no: page,
-            },
-            success: function (data) {
-              console.log(data);
-                $("#table-data").html(data);
-                fn?.();
+function loadTable(page = 1, fn) {
+    $.ajax({
+        url: "adminUserList.php",
+        type: "POST",
+        data: {
+            page_no: page,
+        },
+        success: function (data) {
+            $("#table-data").html(data);
+            if (fn) fn();
+        }
+    });
+}
+
+// Search code
+function loadSearch(page = 1) {
+    var search_term = $("#searchInput").val();
+    $.ajax({
+        url: "adminUserList.php",
+        type: "POST",
+        data: {
+            search: search_term,
+            page_no: page,
+        },
+        success: function (data) {
+            $("#table-data").html(data);
+        }
+    });
+}
+
+// Trigger search on keyup
+$(document).on("keyup", "#searchInput", function () {
+    loadSearch();
+});
+
+
+
+function columnSorting(page_num) {
+    page_num = page_num ? page_num : 0;
+    let coltype = '', colorder = '', classAdd = '', classRemove = '';
+    $("th.sorting").each(function () {
+        if ($(this).attr('colorder') != '') {
+            coltype = $(this).attr('coltype');
+            colorder = $(this).attr('colorder');
+
+            if (colorder == 'asc') {
+                classAdd = 'asc';
+                classRemove = 'desc';
+            } else {
+                classAdd = 'desc';
+                classRemove = 'asc';
             }
-        });
-    }
+        }
+    });
 
-    // Load table data initially
-    loadTable();
-
-    // // Pagination for user-view
-    // $(document).on("click", ".page-link a", function (e) {
-    //     e.preventDefault();
-    //     var page_id = $(this).attr("id");
-    //     var sort_order = $(this).attr("");
-    //     loadTable(page_id,sort_order);
-    //     console.log(sort_order);
-    //     console.log(page_id);
-    //     alert("ok");
-    // });
-
-    // Search code
-    function loadSearch(page = 1) {
-        var search_term = $("#searchInput").val();
-        $.ajax({
-            url: "adminUserList.php",
-            type: "POST",
-            data: {
-                search: search_term,
-                page_no: page,
-
-            },
-            success: function (data) {
-                $("#table-data").html(data);
+    $.ajax({
+        type: 'POST',
+        url: 'adminUserList.php',
+        data: { page: page_num, coltype: coltype, colorder: colorder },
+        success: function (html) {
+            $('#dataContainer').html(html);
+            if (coltype != '' && colorder != '') {
+                $("th.sorting").each(function () {
+                    if ($(this).attr('coltype') == coltype) {
+                        $(this).attr("colorder", colorder);
+                        $(this).removeClass(classRemove);
+                        $(this).addClass(classAdd);
+                    }
+                });
             }
-        });
-    }
-
-    // Trigger search on keyup
-    $(document).on("keyup", "#searchInput", function () {
-        loadSearch();
+        }
     });
+}
 
-    // Code for pagination search
-    $(document).on("click", ".page-item a", function (e) {
-        e.preventDefault();
-        var page_id = $(this).attr("id");
-        loadSearch(page_id);
+$(function () {
+    $(document).on("click", "th.sorting", function () {
+        let current_colorder = $(this).attr('colorder');
+        $('th.sorting').attr('colorder', '');
+        $('th.sorting').removeClass('asc');
+        $('th.sorting').removeClass('desc');
+        if (current_colorder == 'asc') {
+            $(this).attr("colorder", "desc");
+            $(this).removeClass("asc");
+            $(this).addClass("desc");
+        } else {
+            $(this).attr("colorder", "asc");
+            $(this).removeClass("desc");
+            $(this).addClass("asc");
+        }
+        columnSorting();
     });
-
-    // Sorting select change event
-    $("#sort-order").change(function () {
-        loadTable(); // Reload table data on sorting change
-    });
-
-
-    // Sorting code
-    $(document).on("change", "#sort-order", function () {
-        var sortOrder = $(this).val();
-        sortTable(sortOrder);
-    });
-
-
-    // Function to sort table
-    function sortTable(order) {
-        var currentPage = $("#current_page").val();
-        $.ajax({
-            url: "adminUserList.php",
-            type: "POST",
-            data: {
-                page_no: currentPage,
-                sort_order: order
-            },
-            success: function (data) {
-                $("#table-data").html(data);
-            }
-        });
-    }
-
-
-
-
-
-
-
-
-
-
+});
 
 
 
@@ -157,14 +151,14 @@ $(document).ready(function () {
             }
         });
     });
-});
+
 
 function showToast(message, type) {
     var toastElement = $(".toast");
     var toastBody = $(".toast-body");
     toastBody.text(message);
     toastElement.removeClass("bg-success bg-error");
-    if (type === "success") {
+    if (type.toLowerCase() === "success") {
         toastElement.addClass("bg-success");
     } else if (type === "error") {
         toastElement.addClass("bg-error");
