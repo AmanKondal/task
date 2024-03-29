@@ -12,31 +12,17 @@ function loadTable(page = 1, fn) {
     });
 }
 
-// Search code
-function loadSearch(page = 1) {
-    var search_term = $("#searchInput").val();
-    $.ajax({
-        url: "adminUserList.php",
-        type: "POST",
-        data: {
-            search: search_term,
-            page_no: page,
-        },
-        success: function (data) {
-            $("#table-data").html(data);
-        }
-    });
-}
 
 // Trigger search on keyup
 $(document).on("keyup", "#searchInput", function () {
-    loadSearch();
+columnSorting();
 });
 
 
 
 function columnSorting(page_num) {
     page_num = page_num ? page_num : 0;
+    var search_term = $("#searchInput").val();
     let coltype = '', colorder = '', classAdd = '', classRemove = '';
     $("th.sorting").each(function () {
         if ($(this).attr('colorder') != '') {
@@ -56,7 +42,7 @@ function columnSorting(page_num) {
     $.ajax({
         type: 'POST',
         url: 'adminUserList.php',
-        data: { page: page_num, coltype: coltype, colorder: colorder },
+        data: { page: page_num, coltype: coltype, colorder: colorder,search:search_term },
         success: function (html) {
             $('#dataContainer').html(html);
             if (coltype != '' && colorder != '') {

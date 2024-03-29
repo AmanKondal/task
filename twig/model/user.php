@@ -78,13 +78,14 @@ class dataBase
     }
 
     // Search user
-    public function searchUser($keyword, $limit = null)
+    public function searchUser($keyword, $offset, $limit = null)
     {
         if ($limit !== null) {
-            $searchSql = "SELECT * FROM user WHERE f_name LIKE ? LIMIT ?";
+            $searchSql = "SELECT * FROM user WHERE f_name LIKE ? LIMIT ?, ?";
             $stmt = $this->pdo->prepare($searchSql);
             $stmt->bindValue(1, "%$keyword%", PDO::PARAM_STR);
-            $stmt->bindValue(2, $limit, PDO::PARAM_INT);
+            $stmt->bindValue(2, $offset, PDO::PARAM_INT);
+            $stmt->bindValue(3, $limit, PDO::PARAM_INT);
             $stmt->execute();
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
             return $result ? $result : false;
@@ -92,6 +93,8 @@ class dataBase
             return false;
         }
     }
+
+
 
     // Count Totall Record
     public function getTotalRecords($columns = null, $keyword = null)

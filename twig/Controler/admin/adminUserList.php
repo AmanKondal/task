@@ -22,7 +22,7 @@ if (!empty($_POST['coltype']) && !empty($_POST['colorder'])) {
     $sortOrder = strtoupper($colorder);
 }
 if ($searchValue !== "") {
-    $result = $database->searchUser($searchValue, $limit, $offset);
+    $result = $database->searchUser($searchValue,$offset, $limit);
 } elseif ($sortSQL !== '') {
     $result = $database->getUsersSorted($sortOrder, $offset, $limit);
     
