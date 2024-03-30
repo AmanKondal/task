@@ -1,122 +1,148 @@
-$(document).ready(function () {
-    // Function to load table data
-    function loadTable(page) {
-        $.ajax({
-            url: "userViewList.php",
-            type: "POST",
-            data: {
-                page_no: page
-            },
-            success: function (data) {
-                $("#table-data").html(data);
-            }
-        });
-    }
+// code for admin view
+function loadTable(page = 1, fn) {
+    $.ajax({
+        url: "UserViewList.php",
+        type: "POST",
+        data: {
+            page_no: page,
+        },
+        success: function (data) {
+            $("#table-data").html(data);
+            if (fn) fn();
+        }
+    });
+}
 
-    // Load table data initially
+
+// Trigger search on keyup
+$(document).on("keyup", "#searchInput", function () {
+    columnSorting();
+});
+
+
+
+function columnSorting(page_num) {
+    page_num = page_num ? page_num : 0;
+    var search_term = $("#searchInput").val();
+    let coltype = '', colorder = '', classAdd = '', classRemove = '';
+    $("th.sorting").each(function () {
+        if ($(this).attr('colorder') != '') {
+            coltype = $(this).attr('coltype');
+            colorder = $(this).attr('colorder');
+
+            if (colorder == 'asc') {
+                classAdd = 'asc';
+                classRemove = 'desc';
+            } else {
+                classAdd = 'desc';
+                classRemove = 'asc';
+            }
+        }
+    });
+
+    $.ajax({
+        type: 'POST',
+        url: 'UserViewList.php',
+        data: { page: page_num, coltype: coltype, colorder: colorder, search: search_term },
+        success: function (html) {
+            $('#dataContainer').html(html);
+            if (coltype != '' && colorder != '') {
+                $("th.sorting").each(function () {
+                    if ($(this).attr('coltype') == coltype) {
+                        $(this).attr("colorder", colorder);
+                        $(this).removeClass(classRemove);
+                        $(this).addClass(classAdd);
+                    }
+                });
+            }
+        }
+    });
+}
+
+$(function () {
+    $(document).on("click", "th.sorting", function () {
+        let current_colorder = $(this).attr('colorder');
+        $('th.sorting').attr('colorder', '');
+        $('th.sorting').removeClass('asc');
+        $('th.sorting').removeClass('desc');
+        if (current_colorder == 'asc') {
+            $(this).attr("colorder", "desc");
+            $(this).removeClass("asc");
+            $(this).addClass("desc");
+        } else {
+            $(this).attr("colorder", "asc");
+            $(this).removeClass("desc");
+            $(this).addClass("asc");
+        }
+        columnSorting();
+    });
+});
+
+
+
+// Reset button code
+$("#resetButton").click(function () {
+    $("#searchInput").val('');
     loadTable();
-
-    // Pagination for user-view
-    $(document).on("click", ".page-link a", function (e) {
-        e.preventDefault();
-        var page_id = $(this).attr("id");
-        loadTable(page_id);
-    });
-
-    // Search code
-    function loadSearch(page) {
-        var search_term = $("#searchInput").val();
-        $.ajax({
-            url: "userViewList.php",
-            type: "POST",
-            data: {
-                search: search_term,
-                page_no: page
-            },
-            success: function (data) {
-                $("#table-data").html(data);
-            }
-        });
-    }
-
-    // Trigger search on keyup
-    $(document).on("keyup", "#searchInput", function () {
-        loadSearch();
-    });
-
-    // Code for pagination search
-    $(document).on("click", ".page-item a", function (e) {
-        e.preventDefault();
-        var page_id = $(this).attr("id");
-        loadSearch(page_id);
-    });
-
-    // Reset button code
-    $("#resetButton").click(function () {
-        $("#searchInput").val('');
-        loadTable();
-    });
-
-    // Sort table code
-    $(document).on("change", "#sort-order", function () {
-        var sortOrder = $(this).val();
-        sortTable(sortOrder);
-    });
-
-    function sortTable(order) {
-        var currentPage = $("#current_page").val();
-        $.ajax({
-            url: "adminUserList.php",
-            type: "POST",
-            data: {
-                page_no: currentPage,
-                sort_order: order
-            },
-            success: function (data) {
-                $("#table-data").html(data);
-            }
-        });
-    }
 });
-$(document).on("click", "#sorting a", function (e) {
+
+
+
+// Form submission for user update
+$(document).on("submit", "#myForm", function (e) {
     e.preventDefault();
-    var page_id = $(this).attr("id");
-    sortTable(page_id);
+    var formData = new FormData(this);
+    $.ajax({
+        url: "userUpdate.php",
+        type: "POST",
+        contentType: false,
+        processData: false,
+        data: formData,
+        success: function (data) {
+            if (data == 1) {
+                $('#userData').modal('hide');
+                loadTable(1, function () { showToast("Record updated successfully", "success") });
+            } else {
+                showToast("Failed to update record", "error");
+
+            }
+        },
+        error: function () {
+            showToast("Error in updating record", "error");
+        }
+    });
 });
 
-// view
-$(document).ready(function () {
+
+function showToast(message, type) {
+    var toastElement = $(".toast");
+    var toastBody = $(".toast-body");
+    toastBody.text(message);
+    toastElement.removeClass("bg-success bg-error");
+    if (type.toLowerCase() === "success") {
+        toastElement.addClass("bg-success");
+    } else if (type === "error") {
+        toastElement.addClass("bg-error");
+    }
+    toastElement.toast({ delay: 2000 }).toast("show");
+    setTimeout(function () {
+        toastElement.toast("hide");
+    }, 5000);
+}
+
+
+$(document).ready(function ($) {
     $(document).on("click", ".btn.btn-info", function () {
         var updateId = $(this).data("eid");
         $.ajax({
-            url: "UserData.php",
+            url: "userData.php",
             type: "POST",
             data: {
                 id: updateId
             },
             success: function (data) {
-                $("#modal .modal-content").html(data);
-                $("#modal").modal("show");
-            }
-        });
-    });
-});
-
-
-
-$(document).ready(function () {
-    $('#email').blur(function () {
-        var email = $(this).val();
-        $.ajax({
-            type: 'POST',
-            url: 'signUp.php',
-            data: { email: email },
-            success: function (response) {
-                if (response === 'exists') {
-                    $('#email-error').text('Email already exists');
-                } else {
-                    $('#email-error').text('');
-                }
+                $('.modal-content').html(data);
+                $('#userData').modal('show');
             }
         });
     });

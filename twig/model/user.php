@@ -17,27 +17,31 @@ class dataBase
             echo "Connection failed: " . $e->getMessage();
         }
     }
-    // Login Code
-    public function loginSession()
-    {
-        session_start();
-        if (isset($_SESSION['email'])) {
-            header("location: ../../index.php");
-            exit;
-        }
-    }
 
-    public function noLoginSession()
-    {
-        session_start();
-        if (isset($_SESSION['email'])) {
-            if ($_SESSION['type'] == 1) {
-                header("location: login.php");
-            } elseif ($_SESSION['type'] == 0) {
-                header("location: index.php");
-            }
-        }
-    }
+
+    // Login Code
+    // public function loginSession()
+    // {
+    //     session_start();
+    //     if (isset($_SESSION['email'])) {
+    //         header("location: ../../index.php");
+    //         exit;
+    //     }
+    // }
+
+    // public function noLoginSession()
+    // {
+    //     session_start();
+    //     if (isset($_SESSION['email'])) {
+    //         if ($_SESSION['type'] == 1) {
+    //             header("location: login.php");
+    //         } elseif ($_SESSION['type'] == 0) {
+    //             header("location: index.php");
+    //         }
+    //     }
+    // }
+    
+    
     // Login User Function
     public function loginUser($email, $password)
     {

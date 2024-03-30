@@ -1,3 +1,4 @@
+// code for admin view
 function loadTable(page = 1, fn) {
     $.ajax({
         url: "adminUserList.php",

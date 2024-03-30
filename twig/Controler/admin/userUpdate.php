@@ -1,9 +1,15 @@
 <?php
 require_once '../../vendor/autoload.php';
 require_once '../../model/user.php';
-$loader = new Twig\Loader\FilesystemLoader('../../view/admin');
-$twig = new Twig\Environment($loader);
+
+use Twig\Loader\FilesystemLoader;
+use Twig\Environment;
+
+$loader = new FilesystemLoader('../../view/admin');
+$twig = new Environment($loader);
+
 $database = new Database();
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id = $_POST['id'];
     $firstname = $_POST['firstname'];
@@ -21,19 +27,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $country = $_POST['country'];
     $code = $_POST['code'];
     $imageNames = array();
-    foreach ($_FILES['imagename']['name'] as $key => $value) {
-        $name = $_FILES['imagename']['name'][$key];
-        $temp_name = $_FILES['imagename']['tmp_name'][$key];
-        $extension = pathinfo($name, PATHINFO_EXTENSION);
-        $unique_name = uniqid() . '_' . time() . '.' . $extension;
-        $folder = "../../uploads/" . $unique_name;
-        if (move_uploaded_file($temp_name, $folder)) {
-            $imageNames[] = $unique_name;
-        } else {
-            $error = 'Failed to upload some files.';
-            break;
+
+    // Check if new images are uploaded
+    if (!empty($_FILES['imagename']['name'][0])) {
+        foreach ($_FILES['imagename']['name'] as $key => $value) {
+            $name = $_FILES['imagename']['name'][$key];
+            $temp_name = $_FILES['imagename']['tmp_name'][$key];
+            $extension = pathinfo($name, PATHINFO_EXTENSION);
+            $unique_name = uniqid() . '_' . time() . '.' . $extension;
+            $folder = "../../uploads/" . $unique_name;
+
+            // Check if file upload was successful
+            if (move_uploaded_file($temp_name, $folder)) {
+                $imageNames[] = $unique_name;
+            } else {
+                $error = 'Failed to upload some files.';
+                break;
+            }
         }
+    } else {
+        // If no new images are uploaded, use the existing image
+        $imageNames[] = $existing_image;
     }
+
     $update_data = array(
         'f_name' => $firstname,
         'l_name' => $lastname,
@@ -50,16 +66,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         'code' => $code,
         'image' => implode(",", $imageNames),
     );
+
+    // Update user data
     $result = $database->updateUser($update_data, "uid = '$id'");
-    if ($result && $existing_image && file_exists('uploads/' . $existing_image)) {
-        unlink('uploads/' . $existing_image);
+
+    // Delete existing image if necessary
+    if ($result && $existing_image && file_exists('../../uploads/' . $existing_image)) {
+        unlink('../../uploads/' . $existing_image);
     }
 
+    // Check if update was successful
     if ($result) {
         echo 1;
-        exit();
     } else {
         echo 0;
-        exit();
     }
+    exit();
 }

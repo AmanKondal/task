@@ -2,31 +2,41 @@
 session_start();
 require_once '../../vendor/autoload.php';
 require_once '../../model/user.php';
-$loader = new Twig\Loader\FilesystemLoader('../../view/user',);
-$twig = new Twig\Environment($loader);
-$database = new Database();
-$limit = 5;
-$email = $_SESSION['email'];
-$searchValue = isset($_POST['search']) ? $_POST['search'] : '';
-$sortOrder = isset($_POST['sort_order']) ? $_POST['sort_order'] : '';
-$page = isset($_POST["page_no"]) ? $_POST["page_no"] : 1;
-$sno = ($page - 1) * $limit + 1;
-if ($searchValue !== "") {
-    $result = $database->searchUser($searchValue, (int)$limit);
-    $total_record = $database->getTotalRecords(['f_name'], $searchValue);
-    $total_page = ceil($total_record / $limit);
-    echo $twig->render('UserViewList.twig', ['result' => $result, 'total_page' => $total_page, 'current_page' => $page, 'sno' => $sno, 'searchValue' => $searchValue, 'email' => $email]);
-}elseif($sortOrder !==''){
-    $result=$database->getUsersSorted($sortOrder,$limit);
-    $total_record = $database->getTotalRecords();
-    $total_page = ceil($total_record / $limit);
-    echo $twig->render('UserViewList.twig', ['result' => $result, 'total_page' => $total_page, 'current_page' => $page, 'sno' => $sno, 'email' => $email]);
-} 
-else {
-    $result = $database->selectAllUser($limit, $page);
-    $total_record = $database->getTotalRecords();
-    $total_page = ceil($total_record / $limit);
-    echo $twig->render('UserViewList.twig', ['result' => $result, 'total_page' => $total_page, 'current_page' => $page, 'sno' => $sno, 'email' => $email]);
-}
+require_once '../pagination.php';
 
-?>
+$loader = new Twig\Loader\FilesystemLoader(
+    '../../view/user',
+    '../../view/notification',
+);
+$twig = new Twig\Environment($loader);
+$database = new DataBase();
+$limit = 5;
+$offset = !empty($_POST['page']) ? $_POST['page'] : 0;
+$searchValue = isset($_POST['search']) ? $_POST['search'] : '';
+$sortSQL = '';
+$sortOrder = 'ASC';
+if (!empty($_POST['coltype']) && !empty($_POST['colorder'])) {
+    $coltype = $_POST['coltype'];
+    $colorder = $_POST['colorder'];
+    $sortSQL = " $coltype $colorder";
+    $sortOrder = strtoupper($colorder);
+}
+if ($searchValue !== "") {
+    $result = $database->searchUser($searchValue, $offset, $limit);
+} elseif ($sortSQL !== '') {
+    $result = $database->getUsersSorted($sortOrder, $offset, $limit);
+} else {
+    $result = $database->selectAllUser($limit, $offset);
+}
+$total_record = $database->getTotalRecords(['f_name'], $searchValue);
+
+$pagination = new Pagination([
+    'totalRows' => $total_record,
+    'perPage' => $limit,
+    'currentPage' => $offset,
+    'contentDiv' => 'dataContainer',
+    'link_func' => 'columnSorting'
+]);
+$paginationLinks = $pagination->createLinks();
+$email = $_SESSION['email'];
+echo $twig->render('userViewList.twig', ['result' => $result, 'email' => $email, 'paginationLinks' => $paginationLinks]);
