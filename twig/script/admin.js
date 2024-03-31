@@ -117,6 +117,7 @@ $(function () {
     // Form submission for user update
     $(document).on("submit", "#myForm", function (e) {
         e.preventDefault();
+        
         var formData = new FormData(this);
         $.ajax({
             url: "userUpdate.php",
@@ -155,3 +156,22 @@ function showToast(message, type) {
         toastElement.toast("hide");
     }, 5000);
 }
+
+
+// view code from update data
+$(document).ready(function ($) {
+    $(document).on("click", ".btn.btn-info", function () {
+        var updateId = $(this).data("eid");
+        $.ajax({
+            url: "viewUserData.php",
+            type: "POST",
+            data: {
+                id: updateId
+            },
+            success: function (data) {
+                $('.modal-content').html(data);
+                $('#userData').modal('show');
+            }
+        });
+    });
+});

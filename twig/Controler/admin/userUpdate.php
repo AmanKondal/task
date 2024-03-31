@@ -29,10 +29,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $imageNames = array();
 
     // Check if new images are uploaded
-    if (!empty($_FILES['imagename']['name'][0])) {
-        foreach ($_FILES['imagename']['name'] as $key => $value) {
-            $name = $_FILES['imagename']['name'][$key];
-            $temp_name = $_FILES['imagename']['tmp_name'][$key];
+    if (!empty($_FILES['image']['name'][0])) {
+        foreach ($_FILES['image']['name'] as $key => $value) {
+            $name = $_FILES['image']['name'][$key];
+            $temp_name = $_FILES['image']['tmp_name'][$key];
             $extension = pathinfo($name, PATHINFO_EXTENSION);
             $unique_name = uniqid() . '_' . time() . '.' . $extension;
             $folder = "../../uploads/" . $unique_name;
