@@ -11,7 +11,8 @@ $loader = new Twig\Loader\FilesystemLoader(
 $twig = new Twig\Environment($loader);
 $database = new DataBase();
 $limit = 5;
-$offset = !empty($_POST['page']) ? $_POST['page'] : 0;
+$offset = !empty($_POST['page']) ? $_POST['page'] : 1;
+$sno=$offset;
 $searchValue = isset($_POST['search']) ? $_POST['search'] : '';
 $sortSQL = '';
 $sortOrder = 'ASC';
@@ -38,5 +39,4 @@ $pagination = new Pagination([
     'link_func' => 'columnSorting'
 ]);
 $paginationLinks = $pagination->createLinks();
-$email = $_SESSION['email'];
-echo $twig->render('userViewList.twig', ['result' => $result, 'email' => $email, 'paginationLinks' => $paginationLinks]);
+echo $twig->render('userViewList.twig', ['result' => $result, 'sno'=>$sno, 'paginationLinks' => $paginationLinks]);

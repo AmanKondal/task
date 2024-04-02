@@ -3,7 +3,7 @@ class Pagination{
 	var $baseURL		= '';
 	var $totalRows  	= '';
 	var $perPage	 	= 5;
-	var $numLinks		=  3;
+	var $numLinks		=  4;
 	var $currentPage	=  0;
 	var $firstLink   	= '&lsaquo; First';
 	var $nextLink		= 'Next';
@@ -94,7 +94,6 @@ class Pagination{
 		}
 		
 		$uriPageNum = $this->currentPage;
-		
 		$this->currentPage = floor(($this->currentPage/$this->perPage) + 1);
 
 		// Calculate the start and end numbers. 
@@ -119,7 +118,7 @@ class Pagination{
 
 		// Write the digit links
 		for ($loop = $start -1; $loop <= $end; $loop++){
-			$i = ($loop * $this->perPage) - $this->perPage;
+			$i = ($loop * $this->perPage)+1 - $this->perPage;
 					
 			if ($i >= 0){
 				if ($this->currentPage == $loop){

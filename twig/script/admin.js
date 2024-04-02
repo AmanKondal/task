@@ -15,11 +15,14 @@ function loadTable(page = 1, fn) {
 
 
 // Trigger search on keyup
-$(document).on("keyup", "#searchInput", function () {
-columnSorting();
+// $(document).on("keyup", "#searchInput", function () {
+// columnSorting();
+// });
+
+//  with button
+$('#searchButton').click(function () {
+    columnSorting();
 });
-
-
 
 function columnSorting(page_num) {
     page_num = page_num ? page_num : 0;

@@ -10,12 +10,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['email'];
     $password = md5($_POST['password']);
     $result = $database->loginUser($email, $password);
-
     if (!empty($result)) {
         $_SESSION['email'] = $result['email'];
         $_SESSION['type'] = $result['type'];
         $_SESSION['uid'] = $result['uid'];
-
         if ($result['type'] == 1) {
             $_SESSION = [
                 'email' => $result['email'],
@@ -35,6 +33,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $error = "Invalid email or password. Please try again.";
     }
 }
-
 echo $twig->render('login.twig', ['error' => $error]);
 ?>

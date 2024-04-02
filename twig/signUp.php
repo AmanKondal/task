@@ -1,4 +1,6 @@
- <?php
+<?php
+session_start(); // Start the session
+
 require_once 'vendor/autoload.php';
 require_once 'model/user.php';
 
@@ -47,8 +49,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } else {
             $insertId = $database->registerUser($userData);
             if ($insertId) {
-                $message = 'Your record was added successfully';
-                header("location: controler/user/userView.php?message");
+                $_SESSION['email'] = $email;
+                header("location: controler/user/userView.php");
                 exit;
             } else {
                 $error = "Your record couldn't be added";

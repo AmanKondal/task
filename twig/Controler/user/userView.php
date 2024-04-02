@@ -10,7 +10,7 @@ $loader = new Twig\Loader\FilesystemLoader([
 ]);
 $database = new Database();
 $twig = new Twig\Environment($loader);
-echo $twig->render('userView.twig');
+echo $twig->render('userView.twig',['email'=>$userprofile]);
 }else {
     header('location:../../index.php');
 }
