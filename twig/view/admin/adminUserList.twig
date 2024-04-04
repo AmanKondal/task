@@ -17,26 +17,31 @@
                     <tr>
                         <th scope="col" colorder="">
                             Sno
+                                                    
                         </th>
-                        <th scope="col" class="sorting" coltype="name" colorder="">
+                        <th scope="col" class="sorting" coltype="f_name" colorder="">
                             Name
+                                                    
                         </th>
-                      <th scope="col" class="sorting" coltype="email" colorder="">Email </th>
-
-            <th scope="col" coltype="phone">
-                phone-No
+                        <th scope="col" class="sorting" coltype="email" colorder="">
+                            Email 
+                        </th>
+                        <th scope="col" coltype="phone">
+                            phone-No
+                                                                    
                                         
-            </th>
-            <th scope="col" coltype="Gender">
-                Gender
+                        </th>
+                        <th scope="col" class="sorting" coltype="Gender" colorder="">
+                            Gender
                                         
-            </th>
-            <th scope="col" coltype="action">
-                Action
+                        </th>
+                        <th scope="col" coltype="action">
+                            Action
                                         
+                        </th>
+                    </tr>
+                </thead>
             </th>
-</tr></thead></th>
-
         </tr>
     </body>
 </html></thead><!-- Table body --><tr>
@@ -62,9 +67,11 @@
             <td>
                 <button type='button' class='btn btn-info' data-eid='{{ row['uid'] }}'>
                     view
+                                    
                 </button>
                 <button type='button' class='btn btn-danger' data-id='{{ row['uid'] }}'>
                     Delete
+                                    
                 </button>
             </td>
         </tr>
@@ -75,6 +82,7 @@
         <td colspan="8">
             <h2>
                 No Records Found
+                            
             </h2>
         </td>
     </tr>

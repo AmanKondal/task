@@ -7,8 +7,6 @@
             Curd
                     
         </title>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-        <link href="../../public/css/style.css" rel="stylesheet">
     </head>
     <body>
         <form method="post" enctype="multipart/form-data" class="container mt-5" id="myForm">
@@ -44,7 +42,7 @@
                                                 <div class="row">
                                                     <div class="col-md-6 mb-4 pb-2">
                                                         <div class="form-outline">
-                                                            <input type="text" id="firstname" name="firstname" value="{{ row.f_name }}" class="form-control form-control-lg" />
+                                                            <input type="text" id="firstname" name="firstname" value="{{ row.f_name }}" class="form-control form-control-lg" required/>
                                                             <input type="hidden" name="id" value="{{ row.uid }}">
                                                             <label class="form-label" for="firstname">
                                                                 First name
@@ -54,7 +52,7 @@
                                                     </div>
                                                     <div class="col-md-6 mb-4 pb-2">
                                                         <div class="form-outline">
-                                                            <input type="text" id="lastname" name="lastname" value="{{ row.l_name }}" class="form-control form-control-lg" />
+                                                            <input type="text" id="lastname" name="lastname" value="{{ row.l_name }}" class="form-control form-control-lg" required/>
                                                             <label class="form-label" for="lastname">
                                                                 Last name
                                                                                                                             
@@ -65,7 +63,7 @@
                                                 <div class="row">
                                                     <div class="col-md-6 mb-4 pb-2">
                                                         <div class="form-outline">
-                                                            <input type="text" id="fathername" name="fathername" value="{{ row.father_name }}" class="form-control form-control-lg" />
+                                                            <input type="text" id="fathername" name="fathername" value="{{ row.father_name }}" class="form-control form-control-lg" required/>
                                                             <label class="form-label" for="fathername">
                                                                 Father name
                                                                                                                             
@@ -74,7 +72,7 @@
                                                     </div>
                                                     <div class="col-md-6 mb-4 pb-2">
                                                         <div class="form-outline">
-                                                            <input type="text" id="mothername" name="mothername" value="{{ row.mother_name }}" class="form-control form-control-lg" />
+                                                            <input type="text" id="mothername" name="mothername" value="{{ row.mother_name }}" class="form-control form-control-lg" required/>
                                                             <label class="form-label" for="mothername">
                                                                 Mother name
                                                                                                                             
@@ -116,7 +114,7 @@
                                                 </div>
                                                 <div class="mb-4 pb-2">
                                                     <div class="form-outline">
-                                                        <input type="text" id="email" name="email" value="{{ row.email }}" class="form-control form-control-lg" />
+                                                        <input type="text" id="email" name="email" value="{{ row.email }}" class="form-control form-control-lg" required/>
                                                         <label class="form-label" for="email">
                                                             Email-id
                                                                                                                     
@@ -133,7 +131,7 @@
                                                 </h3>
                                                 <div class="mb-4 pb-2">
                                                     <div class="form-outline form-white">
-                                                        <input type="text" id="street" name="street" value="{{ row.street_no }}" class="form-control form-control-lg" />
+                                                        <input type="text" id="street" name="street" value="{{ row.street_no }}" class="form-control form-control-lg" required/>
                                                         <label class="form-label" for="street">
                                                             Street + Nr
                                                                                                                     
@@ -152,16 +150,15 @@
                                                 <div class="row">
                                                     <div class="col-md-5 mb-4 pb-2">
                                                         <div class="form-outline form-white">
-                                                            <input type="text" id="zip_code" name="zip_code" value="{{ row.zip_code }}" class="form-control form-control-lg" />
+                                                            <input type="text" id="zip_code" name="zip_code" value="{{ row.zip_code }}" class="form-control form-control-lg" required/>
                                                             <label class="form-label" for="zip_code">
                                                                 Zip Code
-                                                                                                                            
                                                             </label>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-7 mb-4 pb-2">
                                                         <div class="form-outline form-white">
-                                                            <input type="text" id="place" name="place" value="{{ row.place }}" class="form-control form-control-lg" />
+                                                            <input type="text" id="place" name="place" value="{{ row.place }}" class="form-control form-control-lg" required/>
                                                             <label class="form-label" for="place">
                                                                 Place
                                                                                                                             
@@ -171,7 +168,7 @@
                                                 </div>
                                                 <div class="mb-4 pb-2">
                                                     <div class="form-outline form-white">
-                                                        <input type="text" id="country" name="country" value="{{ row.country }}" class="form-control form-control-lg" />
+                                                        <input type="text" id="country" name="country" value="{{ row.country }}" class="form-control form-control-lg" required/>
                                                         <label class="form-label" for="country">
                                                             Country
                                                                                                                     
@@ -181,7 +178,7 @@
                                                 <div class="row">
                                                     <div class="col-md-5 mb-4 pb-2">
                                                         <div class="form-outline form-white">
-                                                            <input type="text" id="code" name="code" value="{{ row.code }}" class="form-control form-control-lg" />
+                                                            <input type="text" id="code" name="code" value="{{ row.code }}" class="form-control form-control-lg" required/>
                                                             <label class="form-label" for="code">
                                                                 Code +
                                                                                                                             
@@ -190,7 +187,7 @@
                                                     </div>
                                                     <div class="col-md-7 mb-4 pb-2">
                                                         <div class="form-outline form-white">
-                                                            <input type="number" id="phone_number" name="phone_number" value="{{ row.phone }}" class="form-control form-control-lg" />
+                                                            <input type="number" id="phone_number" name="phone_number" value="{{ row.phone }}" class="form-control form-control-lg" required/>
                                                             <label class="form-label" for="phone_number">
                                                                 Phone Number
                                                                                                                             
@@ -212,6 +209,5 @@
                 </div>
             </section>
         </form>
-        <script src="../../script/validation.js"></script>
     </body>
 </html>

@@ -31,7 +31,6 @@
                             <label for="imagename">
                               Image                                                                                                                               
                             </label>
-                            <input type="file" name="imagename" id="fileToUpload" class="form-control">
                             <div class="input-group">
                               {% for image in row.image|split(',') %}
                                 <img src='../../uploads/{{ image }}' alt='User Image' width='50' class="ml-2">

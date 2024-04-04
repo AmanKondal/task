@@ -1,14 +1,14 @@
 <?php
 require_once '../../vendor/autoload.php';
 require_once '../../model/user.php';
-
+require_once '../../service/service.php';
+require_once '../../service/fileuplode.php';
 use Twig\Loader\FilesystemLoader;
 use Twig\Environment;
-
 $loader = new FilesystemLoader('../../view/admin');
 $twig = new Environment($loader);
-
-$database = new Database();
+$userService = new UserService();
+$fileuplode = new file();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id = $_POST['id'];
@@ -27,29 +27,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $country = $_POST['country'];
     $code = $_POST['code'];
     $imageNames = array();
-
-    // Check if new images are uploaded
     if (!empty($_FILES['image']['name'][0])) {
-        foreach ($_FILES['image']['name'] as $key => $value) {
-            $name = $_FILES['image']['name'][$key];
-            $temp_name = $_FILES['image']['tmp_name'][$key];
-            $extension = pathinfo($name, PATHINFO_EXTENSION);
-            $unique_name = uniqid() . '_' . time() . '.' . $extension;
-            $folder = "../../uploads/" . $unique_name;
+        $imageNames = $fileuplode->uploadImages($_FILES);
 
-            // Check if file upload was successful
-            if (move_uploaded_file($temp_name, $folder)) {
-                $imageNames[] = $unique_name;
-            } else {
-                $error = 'Failed to upload some files.';
-                break;
-            }
+        if ($imageNames === false) {
+            $error = 'Failed to upload some files.';
+            echo $error;
+            exit();
         }
     } else {
-        // If no new images are uploaded, use the existing image
         $imageNames[] = $existing_image;
     }
-
     $update_data = array(
         'f_name' => $firstname,
         'l_name' => $lastname,
@@ -66,16 +54,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         'code' => $code,
         'image' => implode(",", $imageNames),
     );
-
-    // Update user data
-    $result = $database->updateUser($update_data, "uid = '$id'");
-
-    // Delete existing image if necessary
+    $result = $userService->updateUser($id, $update_data);
     if ($result && $existing_image && file_exists('../../uploads/' . $existing_image)) {
         unlink('../../uploads/' . $existing_image);
     }
-
-    // Check if update was successful
     if ($result) {
         echo 1;
     } else {

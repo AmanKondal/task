@@ -1,29 +1,18 @@
 <?php
-session_start(); // Start the session
-
-require_once 'vendor/autoload.php';
-require_once 'model/user.php';
-
-$loader = new Twig\Loader\FilesystemLoader('view');
+session_start();
+require_once '../vendor/autoload.php';
+require_once '../service/fileuplode.php';
+$loader = new Twig\Loader\FilesystemLoader('../view');
 $twig = new Twig\Environment($loader);
 $database = new Database();
+$fileuploade = new file();
 $error = '';
-
+if (isset($_SESSION['email'])) {
+    header("Location: user/userView.php");
+    exit();
+}
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $imageNames = array();
-    foreach ($_FILES['imagename']['name'] as $key => $value) {
-        $name = $_FILES['imagename']['name'][$key];
-        $temp_name = $_FILES['imagename']['tmp_name'][$key];
-        $extension = pathinfo($name, PATHINFO_EXTENSION);
-        $unique_name = uniqid() . '_' . time() . '.' . $extension;
-        $folder = "uploads/" . $unique_name;
-        if (move_uploaded_file($temp_name, $folder)) {
-            $imageNames[] = $unique_name;
-        } else {
-            $error = 'Failed to upload some files.';
-            break;
-        }
-    }
+    $imageNames = $fileuploade->uploadImages($_FILES);
     if (empty($error)) {
         $userData = array(
             'f_name' => $_POST['firstname'],
@@ -50,13 +39,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $insertId = $database->registerUser($userData);
             if ($insertId) {
                 $_SESSION['email'] = $email;
-                header("location: controler/user/userView.php");
-                exit;
+                header("Location: user/userView.php");
+                exit();
             } else {
                 $error = "Your record couldn't be added";
             }
         }
     }
 }
-
 echo $twig->render('signUp.twig', ['error' => $error]);

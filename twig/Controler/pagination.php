@@ -77,7 +77,7 @@ class Pagination{
 		// Showing links notification
 		if ($this->showCount){
 			$currentOffset = $this->currentPage;
-			$info = 'Showing ' . ( $currentOffset + 1 ) . ' to ' ;
+			$info = 'Showing ' . ( $currentOffset) . ' to ' ;
 			if( ($currentOffset + $this->perPage) < $this->totalRows)
 				$info .= $currentOffset + $this->perPage;
 			else

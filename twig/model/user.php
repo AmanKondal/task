@@ -141,20 +141,16 @@ class dataBase
     }
 
     public function getUsersSorted($order, $offset, $limit)
-    {
-        $order = strtoupper($order);
-        if ($order !== 'ASC' && $order !== 'DESC') {
-            throw new InvalidArgumentException("Invalid order '$order'.");
-        }
+{
+    $order = strtolower($order);
+    $sql = "SELECT * FROM `user` ORDER BY  $order LIMIT :offset, :limit";
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+    $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+    $stmt->execute();
 
-        $sql = "SELECT * FROM `user` ORDER BY f_name $order LIMIT :offset, :limit";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
-        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
-        $stmt->execute();
-
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 
 
     // Email check 

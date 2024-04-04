@@ -17,71 +17,73 @@
                     <tr>
                         <th scope="col" colorder="">
                             Sno
+                                                                                
+                                                    
                         </th>
-                        <th scope="col" class="sorting" coltype="name" colorder="">
+                        <th scope="col" class="sorting" coltype="f_name" colorder="">
                             Name
+                                                                                
+                                                    
                         </th>
-                        <th scope="col" coltype="email">
-                            Email
+                        <th scope="col" class="sorting" coltype="email" colorder="">
+                            Email 
+                                                    
                         </th>
-                        <th scope="col" coltype="email">
+                        <th scope="col" coltype="phone">
                             phone-No
+                                                                                                
+                                                                    
+                                                    
                         </th>
-                        <th scope="col" coltype="email">
+                        <th scope="col" class="sorting" coltype="Gender" colorder="">
                             Gender
+                                                                    
+                                                    
                         </th>
-                        <th scope="col" coltype="email">
+                        <th scope="col" coltype="action">
                             Action
+                                                                    
+                                                    
                         </th>
                     </tr>
                 </thead>
-                <!-- Table body -->
-                <tr>
-                    {% if result is not empty %}
-                        {% for row in result %}
-                            <tr>
-                                <td>
-                                    {{ sno }}
-                                </td>
-                                <td>
-                                    {{ row['f_name'] }}
-                                    {{ row['l_name'] }}
-                                </td>
-                                <td>
-                                    {{ row['email'] }}
-                                </td>
-                                <td>
-                                    {{ row['phone'] }}
-                                </td>
-                                <td>
-                                    {{ row['gender'] }}
-                                </td>
-                                <td>
-                                    <button type='button' class='btn btn-info' data-eid='{{ row['uid'] }}'>
-                                        view
-                                    </button>
-                                </td>
-                            </tr>
-                            {% set sno = sno + 1 %}
-                        {% endfor %}
-                    {% else %}
-                        <tr>
-                            <td colspan="8">
-                                <h2>
-                                    No Records Found
-                                                                        
-                                                    
-                                </h2>
-                            </td>
-                        </tr>
-                    {% endif %}
-                </tr>
-            </table>
-            <!-- Pagination controls -->
-            <div class="pagination">
-                {{ paginationLinks | raw }}
-            </div>
-        </div>
+            </th>
+        </tr>
     </body>
-</html>
-
+</html></thead><!-- Table body --><tr>
+{% if result is not empty %}
+    {% for row in result %}
+        <tr>
+            <td>
+                {{ sno }}
+            </td>
+            <td>
+                {{ row['f_name'] }}
+                {{ row['l_name'] }}
+            </td>
+            <td>
+                {{ row['email'] }}
+            </td>
+            <td>
+                {{ row['phone'] }}
+            </td>
+            <td>
+                {{ row['gender'] }}
+            </td>
+            <td>
+                <button type='button' class='btn btn-info' data-eid='{{ row['uid'] }}'>
+                    view
+                </button>
+            </td>
+        </tr>
+        {% set sno = sno + 1 %}
+    {% endfor %}
+{% else %}
+    <tr>
+        <td colspan="8">
+            <h2>
+                No Records Found
+            </h2>
+        </td>
+    </tr>
+{% endif %}</tr></table><!-- Pagination controls --><div class="pagination">{{ paginationLinks | raw }}</div></div></body></html>

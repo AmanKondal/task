@@ -1,18 +1,16 @@
 <?php
 session_start();
 require_once '../../vendor/autoload.php';
-require_once '../../model/user.php';
+require_once '../../service/Service.php';
 require_once '../pagination.php';
-
-$loader = new Twig\Loader\FilesystemLoader(
-    '../../view/user',
-    '../../view/notification',
-);
+$loader = new Twig\Loader\FilesystemLoader([
+    '../../view/user'
+]);
 $twig = new Twig\Environment($loader);
-$database = new DataBase();
+$userService = new UserService();
 $limit = 5;
 $offset = !empty($_POST['page']) ? $_POST['page'] : 1;
-$sno=$offset;
+$sno = $offset;
 $searchValue = isset($_POST['search']) ? $_POST['search'] : '';
 $sortSQL = '';
 $sortOrder = 'ASC';
@@ -22,15 +20,8 @@ if (!empty($_POST['coltype']) && !empty($_POST['colorder'])) {
     $sortSQL = " $coltype $colorder";
     $sortOrder = strtoupper($colorder);
 }
-if ($searchValue !== "") {
-    $result = $database->searchUser($searchValue, $offset, $limit);
-} elseif ($sortSQL !== '') {
-    $result = $database->getUsersSorted($sortOrder, $offset, $limit);
-} else {
-    $result = $database->selectAllUser($limit, $offset);
-}
-$total_record = $database->getTotalRecords(['f_name'], $searchValue);
-
+$result = $userService->getUsers($limit, $offset, $searchValue, $sortSQL);
+$total_record = $userService->getTotalRecords($searchValue);
 $pagination = new Pagination([
     'totalRows' => $total_record,
     'perPage' => $limit,
@@ -39,4 +30,4 @@ $pagination = new Pagination([
     'link_func' => 'columnSorting'
 ]);
 $paginationLinks = $pagination->createLinks();
-echo $twig->render('userViewList.twig', ['result' => $result, 'sno'=>$sno, 'paginationLinks' => $paginationLinks]);
+echo $twig->render('userViewList.twig', ['result' => $result, 'sno' => $sno, 'paginationLinks' => $paginationLinks]);
