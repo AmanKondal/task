@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
-    <head></head>
+    <head>    
+</head>
     <body>
         <div class="modal" id="userData" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
@@ -17,27 +18,21 @@
                     <tr>
                         <th scope="col" colorder="">
                             Sno
-                                                    
                         </th>
                         <th scope="col" class="sorting" coltype="f_name" colorder="">
                             Name
-                                                    
                         </th>
                         <th scope="col" class="sorting" coltype="email" colorder="">
                             Email 
                         </th>
                         <th scope="col" coltype="phone">
                             phone-No
-                                                                    
-                                        
                         </th>
-                        <th scope="col" class="sorting" coltype="Gender" colorder="">
+                        <th scope="col"  coltype="Gender" colorder="">
                             Gender
-                                        
                         </th>
                         <th scope="col" coltype="action">
                             Action
-                                        
                         </th>
                     </tr>
                 </thead>
@@ -65,13 +60,11 @@
                 {{ row['gender'] }}
             </td>
             <td>
-                <button type='button' class='btn btn-info' data-eid='{{ row['uid'] }}'>
+                <button type='button' class='btn btn-info' data-eid='{{ row['uid'] }}' >
                     view
-                                    
                 </button>
                 <button type='button' class='btn btn-danger' data-id='{{ row['uid'] }}'>
                     Delete
-                                    
                 </button>
             </td>
         </tr>
@@ -82,7 +75,6 @@
         <td colspan="8">
             <h2>
                 No Records Found
-                            
             </h2>
         </td>
     </tr>

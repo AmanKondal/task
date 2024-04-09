@@ -3,7 +3,7 @@ class Pagination{
 	var $baseURL		= '';
 	var $totalRows  	= '';
 	var $perPage	 	= 5;
-	var $numLinks		=  4;
+	var $numLinks		=  10;
 	var $currentPage	=  0;
 	var $firstLink   	= '&lsaquo; First';
 	var $nextLink		= 'Next';
@@ -51,42 +51,14 @@ class Pagination{
 	// Generate the pagination links	
 	function createLinks(){ 
 		if ($this->totalRows == 0 OR $this->perPage == 0){
-		   return '';
+
+			return '';
 		}
 		// Calculate the total number of pages
-		$numPages = ceil($this->totalRows / $this->perPage);
-
-		// Is there only one page? will not need to continue
-		if ($numPages == 1){
-			if ($this->showCount){
-				$info = '<p>Showing : ' . $this->totalRows.'</p>';
-				return $info;
-			}else{
-				return '';
-			}
-		}
-
-		// Determine the current page	
-		if ( ! is_numeric($this->currentPage)){
-			$this->currentPage = 0;
-		}
+		$numPages = ceil($this->totalRows/ $this->perPage);
 		
 		// Links content string variable
 		$output = '';
-		
-		// Showing links notification
-		if ($this->showCount){
-			$currentOffset = $this->currentPage;
-			$info = 'Showing ' . ( $currentOffset) . ' to ' ;
-			if( ($currentOffset + $this->perPage) < $this->totalRows)
-				$info .= $currentOffset + $this->perPage;
-			else
-				$info .= $this->totalRows;
-				$info .= ' of ' . $this->totalRows . ' | ';
-				$output .= $info;
-		}
-		
-		$this->numLinks = (int)$this->numLinks;
 		
 		// Is the page number beyond the result range? the last page will show
 		if ($this->currentPage > $this->totalRows){

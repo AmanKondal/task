@@ -1,21 +1,24 @@
-    $(document).ready(function () {
-        $('#myForm').submit(function (event) {
-            // Remove existing error messages and field highlighting
-            $('.error-message').remove();
-            $('.is-invalid').removeClass('is-invalid');
-            var isValid = true;
-            // Check file input
-            var fileInput = $('input[name="image[]"]');
-            var fileName = fileInput.val();
+$(document).ready(function () {
+    $('#myForm').submit(function (event) {
+        // Remove existing error messages and field highlighting
+        $('.error-message').remove();
+        $('.is-invalid').removeClass('is-invalid');
+        var isValid = true;
+
+        // Check file input only if there's a new file selected
+        var fileInput = $('input[name="image[]"]');
+        var fileName = fileInput.val();
+        if (fileName !== '') {
             var allowedExtensions = ['jpg', 'jpeg', 'png'];
             var fileExtension = fileName.split('.').pop().toLowerCase();
-            if (fileName === '' || $.inArray(fileExtension, allowedExtensions) === -1) {
+            if ($.inArray(fileExtension, allowedExtensions) === -1) {
                 fileInput.addClass('is-invalid');
                 fileInput.after('<div class="error-message">Please select a valid image file (jpg, jpeg, or png).</div>');
                 isValid = false;
             }
+        }
             // Check other required fields
-            var requiredFields = ['firstname', 'lastname', 'fathername', 'mothername', 'email', 'password', 'confirm_password', 'street', 'zip_code', 'place', 'country', 'code', 'phone_number'];
+            var requiredFields = ['firstname', 'lastname', 'fathername', 'mothername', 'email', 'street', 'zip_code', 'place', 'country', 'code', 'phone_number','password', 'confirm_password',];
             $.each(requiredFields, function (index, fieldName) {
                 var inputField = $('#' + fieldName);
                 if (inputField.val().trim() === '') {

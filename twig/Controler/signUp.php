@@ -29,9 +29,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             'country' => $_POST['country'],
             'code' => $_POST['code'],
             'phone' => $_POST['phone_number'],
+            'type' => $_POST['role'],
             'image' => implode(",", $imageNames),
         );
         $email = $_POST['email'];
+        $role=$_POST['role'];
         $existingUser = $database->getUserByEmail($email);
         if ($existingUser) {
             $error = 'Email already exists';
@@ -39,8 +41,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $insertId = $database->registerUser($userData);
             if ($insertId) {
                 $_SESSION['email'] = $email;
-                header("Location: user/userView.php");
-                exit();
+                $_SESSION['uid']=$insertId;
+                if ($role==1) {
+                    header("Location: admin/adminView.php");
+                } else {
+                    header("Location: user/userView.php");
+                    exit();
+                }
             } else {
                 $error = "Your record couldn't be added";
             }

@@ -11,8 +11,8 @@ class UserService
 
     public function getUsers($limit, $offset, $searchValue, $sortSQL)
     {
-        if ($searchValue !== "") {
-            return $this->model->searchUser($searchValue, $offset, $limit);
+        if ($searchValue !== "" or $sortSQL !=="") {
+            return $this->model->searchUser($searchValue, $sortSQL, $offset, $limit);
         } elseif ($sortSQL !== '') {
             return $this->model->getUsersSorted($sortSQL, $offset, $limit);
         } else {

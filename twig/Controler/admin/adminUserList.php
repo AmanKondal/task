@@ -13,12 +13,10 @@ require_once '../pagination.php';
         $sno=$offset;
         $searchValue = isset($_POST['search']) ? $_POST['search'] : '';
         $sortSQL = '';
-        $sortOrder = 'ASC';
         if (!empty($_POST['coltype']) && !empty($_POST['colorder'])) {
             $coltype = $_POST['coltype'];
             $colorder = $_POST['colorder'];
             $sortSQL = " $coltype $colorder";
-            $sortOrder = strtoupper($colorder);
         }
         $result = $userService->getUsers($limit, $offset, $searchValue,$sortSQL);
         $total_record = $userService->getTotalRecords($searchValue);
@@ -30,4 +28,4 @@ require_once '../pagination.php';
             'link_func' => 'columnSorting'
         ]);
         $paginationLinks = $pagination->createLinks();
-        echo $twig->render('adminUserList.twig', ['result' => $result,'sno'=>$sno, 'paginationLinks' => $paginationLinks]);
+        echo $twig->render('adminUserList.twig', ['result' => $result,'sno'=>$sno, 'paginationLinks' => $paginationLinks, 'currentPage' => $offset]);

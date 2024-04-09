@@ -93,7 +93,7 @@ $(document).on("submit", "#myForm", function (e) {
     e.preventDefault();
     var formData = new FormData(this);
     $.ajax({
-        url: "userUpdate.php",
+        url: "../admin/userUpdate.php",
         type: "POST",
         contentType: false,
         processData: false,
@@ -130,7 +130,7 @@ function showToast(message, type) {
     }, 5000);
 }
 
-
+// user view
 $(document).ready(function ($) {
     $(document).on("click", ".btn.btn-info", function () {
         var updateId = $(this).data("eid");
@@ -147,3 +147,25 @@ $(document).ready(function ($) {
         });
     });
 });
+
+
+
+// view code from update data of user
+$(document).ready(function ($) {
+    $(document).on("click", ".btn.btn-primary", function () {
+        var updateId = $(this).data("eid");
+        $.ajax({
+            url: "loginUserData.php",
+            type: "POST",
+            data: {
+                id: updateId
+            },
+            success: function (data) {
+                $('.modal-content').html(data);
+                $('#userData').modal('show');
+            }
+        });
+    });
+});
+
+

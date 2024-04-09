@@ -1,9 +1,10 @@
 <html>
     {% include 'header.html' %}
-<h2>
-    Welcome 
-    {{ email }}
-</h2>
+    <h2>
+        Welcome 
+            
+        {{ email }}
+    </h2>
     <body>
         <div id="table-data"></div>
         <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
@@ -15,5 +16,13 @@
     showToast("Data load successfully","success");  
     });
     </script>
+        <div class="modal" id="userData" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content"></div>
+            </div>
+        </div>
+        <button class="btn btn-info" id="update" data-eid='{{ uid }}' style="position: absolute; right: 10px; top: 47px; margin-right: 10px;">
+            My-Profile                        
+        </button>
     </body>
 </html>

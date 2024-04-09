@@ -6,11 +6,12 @@ require_once '../pagination.php';
 $loader = new Twig\Loader\FilesystemLoader([
     '../../view/user'
 ]);
+$uid = $_SESSION['uid'];
 $twig = new Twig\Environment($loader);
 $userService = new UserService();
 $limit = 5;
-$offset = !empty($_POST['page']) ? $_POST['page'] : 1;
-$sno = $offset;
+$offset = !empty($_POST['page']) ? $_POST['page'] : 0;
+$sno = $offset+1;
 $searchValue = isset($_POST['search']) ? $_POST['search'] : '';
 $sortSQL = '';
 $sortOrder = 'ASC';
@@ -30,4 +31,4 @@ $pagination = new Pagination([
     'link_func' => 'columnSorting'
 ]);
 $paginationLinks = $pagination->createLinks();
-echo $twig->render('userViewList.twig', ['result' => $result, 'sno' => $sno, 'paginationLinks' => $paginationLinks]);
+echo $twig->render('userViewList.twig', ['result' => $result, 'sno' => $sno, 'paginationLinks' => $paginationLinks,'uid'=>$uid]);

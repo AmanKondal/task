@@ -82,16 +82,23 @@ class dataBase
     }
 
     // Search user
-    public function searchUser($keyword, $offset, $limit = null)
+    public function searchUser($keyword, $order = 'ASC', $offset, $limit = null)
     {
         if ($limit !== null) {
-            $searchSql = "SELECT * FROM user WHERE f_name LIKE ? LIMIT ?, ?";
+            if (!empty($order)) {
+                $searchSql = "SELECT * FROM user WHERE f_name LIKE :keyword ORDER BY $order LIMIT :offset, :limit";
+            } else {
+                $searchSql = "SELECT * FROM user WHERE f_name LIKE :keyword LIMIT :offset, :limit";
+            }
+
             $stmt = $this->pdo->prepare($searchSql);
-            $stmt->bindValue(1, "%$keyword%", PDO::PARAM_STR);
-            $stmt->bindValue(2, $offset, PDO::PARAM_INT);
-            $stmt->bindValue(3, $limit, PDO::PARAM_INT);
+            $stmt->bindValue(':keyword', "%$keyword%", PDO::PARAM_STR);
+            $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
+            $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
             $stmt->execute();
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            // var_dump($result);
+
             return $result ? $result : false;
         } else {
             return false;
@@ -204,6 +211,17 @@ class dataBase
             error_log("Error deleting user: " . $e->getMessage());
             return false;
         }
+    }
+
+
+    public function emailCheck($keyword)
+    {
+        $searchSql = "SELECT * FROM user WHERE email LIKE ?"; 
+        $stmt = $this->pdo->prepare($searchSql);
+        $stmt->bindValue(1, "%$keyword%", PDO::PARAM_STR);
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $result ? $result : false;
     }
 
 }
