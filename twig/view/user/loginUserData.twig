@@ -5,9 +5,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>
             Curd
-                                
-                    
         </title>
+        <script src="../../public/script/validation.js"></script>
+        <link href="../../public/css/style.css" rel="stylesheet">
     </head>
     <body>
         <form method="post" enctype="multipart/form-data" class="container mt-5" id="myForm">
@@ -41,7 +41,7 @@
                                                 <div class="row">
                                                     <div class="col-md-6 mb-4 pb-2">
                                                         <div class="form-outline">
-                                                            <input type="text" id="firstname" name="firstname" value="{{ row.f_name }}" class="form-control form-control-lg" required />
+                                                            <input type="text" id="firstname" name="firstname" value="{{ row.f_name }}" class="form-control form-control-lg" />
                                                             <input type="hidden" name="id" value="{{ row.uid }}">
                                                             <label class="form-label" for="firstname">
                                                                 First name
@@ -50,7 +50,7 @@
                                                     </div>
                                                     <div class="col-md-6 mb-4 pb-2">
                                                         <div class="form-outline">
-                                                            <input type="text" id="lastname" name="lastname" value="{{ row.l_name }}" class="form-control form-control-lg" required />
+                                                            <input type="text" id="lastname" name="lastname" value="{{ row.l_name }}" class="form-control form-control-lg" />
                                                             <label class="form-label" for="lastname">
                                                                 Last name
                                                             </label>
@@ -60,7 +60,7 @@
                                                 <div class="row">
                                                     <div class="col-md-6 mb-4 pb-2">
                                                         <div class="form-outline">
-                                                            <input type="text" id="fathername" name="fathername" value="{{ row.father_name }}" class="form-control form-control-lg" required />
+                                                            <input type="text" id="fathername" name="fathername" value="{{ row.father_name }}" class="form-control form-control-lg" />
                                                             <label class="form-label" for="fathername">
                                                                 Father name
                                                             </label>
@@ -68,7 +68,7 @@
                                                     </div>
                                                     <div class="col-md-6 mb-4 pb-2">
                                                         <div class="form-outline">
-                                                            <input type="text" id="mothername" name="mothername" value="{{ row.mother_name }}" class="form-control form-control-lg" required />
+                                                            <input type="text" id="mothername" name="mothername" value="{{ row.mother_name }}" class="form-control form-control-lg" />
                                                             <label class="form-label" for="mothername">
                                                                 Mother name
                                                             </label>
@@ -88,8 +88,6 @@
                                                     {% endif %}
                                                     <label class="form-check-label" for="male">
                                                         Male
-                                                                                                                                                                    
-                                                                                                            
                                                     </label>
                                                     &nbsp;&nbsp;&nbsp;&nbsp;
                                                                                                                                                             
@@ -102,20 +100,14 @@
                                                     {% endif %}
                                                     <label class="form-check-label" for="female">
                                                         Female
-                                                                                                                                                                    
-                                                                                                            
                                                     </label>
                                                     &nbsp;&nbsp;&nbsp;
-                                                                                                                                                        
-                                                                                                    
                                                 </div>
                                                 <div class="mb-4 pb-2">
                                                     <div class="form-outline">
-                                                        <input type="text" id="email" name="email" value="{{ row.email }}" class="form-control form-control-lg" required />
+                                                        <input type="text" id="email" name="email" value="{{ row.email }}" class="form-control form-control-lg" />
                                                         <label class="form-label" for="email">
                                                             Email-id
-                                                                                                                                                                                
-                                                                                                                    
                                                         </label>
                                                     </div>
                                                 </div>
@@ -125,16 +117,12 @@
                                             <div class="p-5">
                                                 <h3 class="fw-normal mb-5">
                                                     Contact Details
-                                                                                                                                                        
-                                                                                                    
                                                 </h3>
                                                 <div class="mb-4 pb-2">
                                                     <div class="form-outline form-white">
-                                                        <input type="text" id="street" name="street" value="{{ row.street_no }}" class="form-control form-control-lg" required />
+                                                        <input type="text" id="street" name="street" value="{{ row.street_no }}" class="form-control form-control-lg" />
                                                         <label class="form-label" for="street">
                                                             Street + Nr
-                                                                                                                                                                                
-                                                                                                                    
                                                         </label>
                                                     </div>
                                                 </div>
@@ -143,15 +131,13 @@
                                                         <input type="text" id="additional_info" name="additional_info" value="{{ row.additional_info }}" class="form-control form-control-lg" />
                                                         <label class="form-label" for="additional_info">
                                                             Additional Information
-                                                                                                                                                                                
-                                                                                                                    
                                                         </label>
                                                     </div>
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-md-5 mb-4 pb-2">
                                                         <div class="form-outline form-white">
-                                                            <input type="text" id="zip_code" name="zip_code" value="{{ row.zip_code }}" class="form-control form-control-lg" required />
+                                                            <input type="text" id="zip_code" name="zip_code" value="{{ row.zip_code }}" class="form-control form-control-lg" />
                                                             <label class="form-label" for="zip_code">
                                                                 Zip Code
                                                             </label>
@@ -159,7 +145,7 @@
                                                     </div>
                                                     <div class="col-md-7 mb-4 pb-2">
                                                         <div class="form-outline form-white">
-                                                            <input type="text" id="place" name="place" value="{{ row.place }}" class="form-control form-control-lg" required />
+                                                            <input type="text" id="place" name="place" value="{{ row.place }}" class="form-control form-control-lg" />
                                                             <label class="form-label" for="place">
                                                                 Place
                                                             </label>
@@ -168,7 +154,7 @@
                                                 </div>
                                                 <div class="mb-4 pb-2">
                                                     <div class="form-outline form-white">
-                                                        <input type="text" id="country" name="country" value="{{ row.country }}" class="form-control form-control-lg" required />
+                                                        <input type="text" id="country" name="country" value="{{ row.country }}" class="form-control form-control-lg" />
                                                         <label class="form-label" for="country">
                                                             Country
                                                         </label>
@@ -177,7 +163,7 @@
                                                 <div class="row">
                                                     <div class="col-md-5 mb-4 pb-2">
                                                         <div class="form-outline form-white">
-                                                            <input type="text" id="code" name="code" value="{{ row.code }}" class="form-control form-control-lg" required />
+                                                            <input type="text" id="code" name="code" value="{{ row.code }}" class="form-control form-control-lg" />
                                                             <label class="form-label" for="code">
                                                                 Code +
                                                             </label>
@@ -185,7 +171,7 @@
                                                     </div>
                                                     <div class="col-md-7 mb-4 pb-2">
                                                         <div class="form-outline form-white">
-                                                            <input type="number" id="phone_number" name="phone_number" value="{{ row.phone }}" class="form-control form-control-lg" required />
+                                                            <input type="number" id="phone_number" name="phone_number" value="{{ row.phone }}" class="form-control form-control-lg" />
                                                             <label class="form-label" for="phone_number">
                                                                 Phone Number
                                                             </label>

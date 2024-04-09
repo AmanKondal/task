@@ -15,20 +15,23 @@ function loadTable(page = 1, fn) {
 
 
 // Trigger search on keyup
-$(document).on("keyup", "#searchInput", function () {
+$('#searchButton').click(function () {
     columnSorting();
 });
 
 
-
-function columnSorting(page_num) {
-    page_num = page_num ? page_num : 0;
+var currentPageNumber = 1
+function columnSorting(page_num, fn) {
+    if (page_num !== undefined) {
+        currentPageNumber = page_num;
+    }
     var search_term = $("#searchInput").val();
     let coltype = '', colorder = '', classAdd = '', classRemove = '';
     $("th.sorting").each(function () {
         if ($(this).attr('colorder') != '') {
             coltype = $(this).attr('coltype');
             colorder = $(this).attr('colorder');
+            console.log(colorder)
 
             if (colorder == 'asc') {
                 classAdd = 'asc';
@@ -42,10 +45,11 @@ function columnSorting(page_num) {
 
     $.ajax({
         type: 'POST',
-        url: 'UserViewList.php',
+        url: 'userViewList.php',
         data: { page: page_num, coltype: coltype, colorder: colorder, search: search_term },
         success: function (html) {
             $('#dataContainer').html(html);
+            if (fn) fn();
             if (coltype != '' && colorder != '') {
                 $("th.sorting").each(function () {
                     if ($(this).attr('coltype') == coltype) {
@@ -88,32 +92,6 @@ $("#resetButton").click(function () {
 
 
 
-// Form submission for user update
-$(document).on("submit", "#myForm", function (e) {
-    e.preventDefault();
-    var formData = new FormData(this);
-    $.ajax({
-        url: "../admin/userUpdate.php",
-        type: "POST",
-        contentType: false,
-        processData: false,
-        data: formData,
-        success: function (data) {
-            if (data == 1) {
-                $('#userData').modal('hide');
-                loadTable(1, function () { showToast("Record updated successfully", "success") });
-            } else {
-                showToast("Failed to update record", "error");
-
-            }
-        },
-        error: function () {
-            showToast("Error in updating record", "error");
-        }
-    });
-});
-
-
 function showToast(message, type) {
     var toastElement = $(".toast");
     var toastBody = $(".toast-body");
@@ -132,7 +110,7 @@ function showToast(message, type) {
 
 // user view
 $(document).ready(function ($) {
-    $(document).on("click", ".btn.btn-info", function () {
+    $(document).on("click", ".btn.btn-success", function () {
         var updateId = $(this).data("eid");
         $.ajax({
             url: "userData.php",
@@ -152,7 +130,7 @@ $(document).ready(function ($) {
 
 // view code from update data of user
 $(document).ready(function ($) {
-    $(document).on("click", ".btn.btn-primary", function () {
+    $(document).on("click", ".btn.btn-info", function () {
         var updateId = $(this).data("eid");
         $.ajax({
             url: "loginUserData.php",
@@ -169,3 +147,35 @@ $(document).ready(function ($) {
 });
 
 
+// update user data 
+$(document).on("submit", "#myForm", function (e) {
+    e.preventDefault();
+    var emptyFields = $(this).find('input[type="text"]').filter(function () {
+        return $.trim($(this).val()) === '';
+    });
+
+    if (emptyFields.length > 0) {
+        showToast("Please fill in all fields", "error");
+        return;
+    }
+
+    var formData = new FormData(this);
+    $.ajax({
+        url: "userUpdate.php",
+        type: "POST",
+        contentType: false,
+        processData: false,
+        data: formData,
+        success: function (data) {
+            if (data == 1) {
+                $('#userData').modal('hide');
+                columnSorting(currentPageNumber, function () { showToast("Record updated successfully", "success") });
+            } else {
+                showToast("Failed to update record", "error");
+            }
+        },
+        error: function () {
+            showToast("Error in updating record", "error");
+        }
+    });
+});
