@@ -16,7 +16,7 @@ class UserService
         } elseif ($sortSQL !== '') {
             return $this->model->getUsersSorted($sortSQL, $offset, $limit);
         } else {
-            return $this->model->selectAllUser($limit, $offset);
+            return $this->model->selectAllUser($offset, $limit,);
         }
     }
 

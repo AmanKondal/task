@@ -9,6 +9,7 @@
     <link href="../public/css/style.css" rel="stylesheet">
     <title>
       Document          
+                
           
     </title>
   </head>
@@ -30,6 +31,7 @@
                       <div class="p-5">
                         <h3 class="fw-normal mb-5" style="color: #4835d4;">
                           General Information
+                                                                            
                                                   
                         </h3>
                         <div class="col-md-15">
@@ -37,6 +39,7 @@
                             <input type="file" name="image[]" multiple accept="image/*">
                             <label class="form-label" for="firstname">
                               Image
+                                                                                        
                                                           
                             </label>
                           </div>
@@ -47,6 +50,7 @@
                               <input type="text" id="firstname" name="firstname" class="form-control form-control-lg" />
                               <label class="form-label" for="firstname">
                                 First name
+                                                                                              
                                                               
                               </label>
                             </div>
@@ -56,6 +60,7 @@
                               <input type="text" id="lastname" name="lastname" class="form-control form-control-lg" />
                               <label class="form-label" for="lastname">
                                 Last name
+                                                                                              
                                                               
                               </label>
                             </div>
@@ -67,6 +72,7 @@
                               <input type="text" id="fathername" name="fathername" class="form-control form-control-lg" />
                               <label class="form-label" for="fathername">
                                 Father name
+                                                                                              
                                                               
                               </label>
                             </div>
@@ -76,6 +82,7 @@
                               <input type="text" id="mothername" name="mothername" class="form-control form-control-lg" />
                               <label class="form-label" for="mothername">
                                 Mother name
+                                                                                              
                                                               
                               </label>
                             </div>
@@ -84,12 +91,14 @@
                         <div class="form-group">
                           <label class="mr-2">
                             Gender
+                                                                                  
                                                       
                           </label>
                           <div class="form-check form-check-inline">
                             <input class="form-check-input" type="radio" name="gender" id="male" value="male">
                             <label class="form-check-label" for="male">
                               Male
+                                                                                        
                                                           
                             </label>
                           </div>
@@ -97,6 +106,7 @@
                             <input class="form-check-input" type="radio" name="gender" id="female" value="female">
                             <label class="form-check-label" for="female">
                               Female
+                                                                                        
                                                           
                             </label>
                           </div>
@@ -106,6 +116,7 @@
                             <input type="text" id="email" name="email" class="form-control form-control-lg" />
                             <label class="form-label" for="email">
                               Email-id
+                                                                                        
                                                           
                             </label>
                             <div id="email-error" class="text-danger"></div>
@@ -116,6 +127,7 @@
                             <input type="password" id="password" name="password" class="form-control form-control-lg" />
                             <label class="form-label" for="password">
                               Password
+                                                          
                             </label>
                           </div>
                         </div>
@@ -124,103 +136,118 @@
                             <input type="password" id="confirm_password" name="confirm_password" class="form-control form-control-lg" />
                             <label class="form-label" for="confirm_password">
                               Confirm Password
+                                                          
                             </label>
                           </div>
                         </div>
                         <label for="role" id="role" name="role">
                           Select your role:
+                                                  
                         </label>
                         <select id="role" name="role">
                           <option name="0" value="0">
                             User
+                                                      
                           </option>
                           <option name="1" value="1">
-                          Admin
-                        </option>
-                      </select>
+                            Admin
+                                                    
+                          </option>
+                        </select>
+                      </div>
                     </div>
-                  </div>
-                  <div class="col-lg-6 bg-indigo">
-                    <div class="p-5">
-                      <h3 class="fw-normal mb-5">
-                        Contact Details
-                      </h3>
-                      <div class="mb-4 pb-2">
-                        <div class="form-outline form-white">
-                          <input type="text" id="street" name="street" class="form-control form-control-lg" />
-                          <label class="form-label" for="street">
-                            Street + Nr
-                                                        
-                          </label>
-                        </div>
-                      </div>
-                      <div class="mb-4 pb-2">
-                        <div class="form-outline form-white">
-                          <input type="text" id="additional_info" name="additional_info" class="form-control form-control-lg" />
-                          <label class="form-label" for="additional_info">
-                            Additional Information
-                                                        
-                          </label>
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="col-md-5 mb-4 pb-2">
-                          <div class="form-outline form-white">
-                            <input type="text" id="zip_code" name="zip_code" class="form-control form-control-lg" />
-                            <label class="form-label" for="zip_code">
-                              Zip Code
-                                                            
-                            </label>
-                          </div>
-                        </div>
-                        <div class="col-md-7 mb-4 pb-2">
-                          <div class="form-outline form-white">
-                            <input type="text" id="place" name="place" class="form-control form-control-lg" />
-                            <label class="form-label" for="place">
-                              Place
-                                                            
-                            </label>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="mb-4 pb-2">
-                        <div class="form-outline form-white">
-                          <input type="text" id="country" name="country" class="form-control form-control-lg" />
-                          <label class="form-label" for="country">
-                            Country
-                                                        
-                          </label>
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="col-md-5 mb-4 pb-2">
-                          <div class="form-outline form-white">
-                            <input type="text" id="code" name="code" class="form-control form-control-lg" />
-                            <label class="form-label" for="code">
-                              Code +
-                                                            
-                            </label>
-                          </div>
-                        </div>
-                        <div class="col-md-7 mb-4 pb-2">
-                          <div class="form-outline form-white">
-                            <input type="text" id="phone_number" name="phone_number" class="form-control form-control-lg" />
-                            <label class="form-label" for="phone_number">
-                              Phone Number
-                                                            
-                            </label>
-                          </div>
-                        </div>
-                      </div>
-                      <button type="submit" class="btn btn-primary btn-lg" data-mdb-ripple-color="dark">
-                        Register
+                    <div class="col-lg-6 bg-indigo">
+                      <div class="p-5">
+                        <h3 class="fw-normal mb-5">
+                          Contact Details
                                                 
-                      </button>
-                      <a href="../index.php" class="btn btn-primary btn-lg" data-mdb-ripple-color="dark">
-                        Login
+                        </h3>
+                        <div class="mb-4 pb-2">
+                          <div class="form-outline form-white">
+                            <input type="text" id="street" name="street" class="form-control form-control-lg" />
+                            <label class="form-label" for="street">
+                              Street + Nr
+                                                                                      
+                                                        
+                            </label>
+                          </div>
+                        </div>
+                        <div class="mb-4 pb-2">
+                          <div class="form-outline form-white">
+                            <input type="text" id="additional_info" name="additional_info" class="form-control form-control-lg" />
+                            <label class="form-label" for="additional_info">
+                              Additional Information
+                                                                                      
+                                                        
+                            </label>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-5 mb-4 pb-2">
+                            <div class="form-outline form-white">
+                              <input type="text" id="zip_code" name="zip_code" class="form-control form-control-lg" />
+                              <label class="form-label" for="zip_code">
+                                Zip Code
+                                                                                            
+                                                            
+                              </label>
+                            </div>
+                          </div>
+                          <div class="col-md-7 mb-4 pb-2">
+                            <div class="form-outline form-white">
+                              <input type="text" id="place" name="place" class="form-control form-control-lg" />
+                              <label class="form-label" for="place">
+                                Place
+                                                                                            
+                                                            
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="mb-4 pb-2">
+                          <div class="form-outline form-white">
+                            <input type="text" id="country" name="country" class="form-control form-control-lg" />
+                            <label class="form-label" for="country">
+                              Country
+                                                                                      
+                                                        
+                            </label>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-5 mb-4 pb-2">
+                            <div class="form-outline form-white">
+                              <input type="text" id="code" name="code" class="form-control form-control-lg" />
+                              <label class="form-label" for="code">
+                                Code +
+                                                                                            
+                                                            
+                              </label>
+                            </div>
+                          </div>
+                          <div class="col-md-7 mb-4 pb-2">
+                            <div class="form-outline form-white">
+                              <input type="text" id="phone_number" name="phone_number" class="form-control form-control-lg" />
+                              <label class="form-label" for="phone_number">
+                                Phone Number
+                                                                                            
+                                                            
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-lg" data-mdb-ripple-color="dark">
+                          Register
+                                                                          
                                                 
-                      </a>
-                    </form>
+                        </button>
+                        <a href="../index.php" class="btn btn-primary btn-lg" data-mdb-ripple-color="dark">
+                          Login
+                                                                          
+                                                
+                        </a>
+                      </form>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -228,6 +255,6 @@
           </div>
         </div>
       </div>
-    </div>
+    </body>
   </body>
 </html></section></body></html>

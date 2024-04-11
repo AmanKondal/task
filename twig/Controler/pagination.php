@@ -2,9 +2,9 @@
 class Pagination{
 	var $baseURL		= '';
 	var $totalRows  	= '';
-	var $perPage	 	= 5;
+	var $perPage	 	= '';
 	var $numLinks		=  10;
-	var $currentPage	=  0;
+	var $currentPage	=  '';
 	var $firstLink   	= '&lsaquo; First';
 	var $nextLink		= 'Next';
 	var $prevLink		= 'Prev';
@@ -72,12 +72,6 @@ class Pagination{
 		$start = (($this->currentPage - $this->numLinks) > 0) ? $this->currentPage - ($this->numLinks - 1) : 1;
 		$end   = (($this->currentPage + $this->numLinks) < $numPages) ? $this->currentPage + $this->numLinks : $numPages;
 
-		// Render the "First" link
-		if  ($this->currentPage > $this->numLinks){
-			$output .= $this->firstTagOpen 
-				. $this->getAJAXlink( '' , $this->firstLink)
-				. $this->firstTagClose; 
-		}
 
 		// Render the "previous" link
 		if  ($this->currentPage != 1){
@@ -111,11 +105,6 @@ class Pagination{
 				. $this->nextTagClose;
 		}
 
-		// Render the "Last" link
-		if (($this->currentPage + $this->numLinks) < $numPages){
-			$i = (($numPages * $this->perPage) - $this->perPage);
-			$output .= $this->lastTagOpen . $this->getAJAXlink( $i, $this->lastLink ) . $this->lastTagClose;
-		}
 
 		// Remove double slashes
 		$output = preg_replace("#([^:])//+#", "\\1/", $output);

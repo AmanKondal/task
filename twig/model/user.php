@@ -52,23 +52,22 @@ class dataBase
         $stmt->closeCursor();
         return $result;
     }
-
-    // Select all user
-    public function selectAllUser($limit = null, $offset )
+    // Select all users
+    public function selectAllUser($offset = 0, $limit = null)
     {
-      
         $sql = "SELECT * FROM user ORDER BY uid ASC LIMIT ?, ?";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(1, $offset, PDO::PARAM_INT);
         $stmt->bindValue(2, $limit, PDO::PARAM_INT);
         $stmt->execute();
         $result = $stmt->fetchAll();
-        if ($result) {
+        if ($result !== false) {
             return $result;
         } else {
             return false;
         }
     }
+
 
 
     // user Data
@@ -106,22 +105,26 @@ class dataBase
     }
 
 
-
-    // Count Totall Record
+    // Count Total Records
     public function getTotalRecords($columns = null, $keyword = null)
     {
         if ($columns !== null && $keyword !== null) {
             $conditions = array();
             foreach ($columns as $column) {
-                $conditions[] = "$column LIKE '%$keyword%'";
+                $conditions[] = "$column LIKE ?";
             }
             $whereClause = implode(" OR ", $conditions);
             $sql = "SELECT COUNT(*) AS total FROM user WHERE $whereClause";
+            $stmt = $this->pdo->prepare($sql);
+            foreach ($columns as $index => $column) {
+                $stmt->bindValue($index + 1, "%$keyword%", PDO::PARAM_STR);
+            }
         } else {
             $sql = "SELECT COUNT(*) AS total FROM user";
+            $stmt = $this->pdo->prepare($sql);
         }
-        $query = $this->pdo->query($sql);
-        $result = $query->fetch(PDO::FETCH_ASSOC);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
         return $result['total'];
     }
 
@@ -147,17 +150,19 @@ class dataBase
         }
     }
 
+    // code for user sotring 
     public function getUsersSorted($order, $offset, $limit)
-{
-    $order = strtolower($order);
-    $sql = "SELECT * FROM `user` ORDER BY  $order LIMIT :offset, :limit";
-    $stmt = $this->pdo->prepare($sql);
-    $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
-    $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
-    $stmt->execute();
+    {
+        $order = strtolower($order);
+        $sql = "SELECT * FROM `user` ORDER BY $order LIMIT :offset, :limit";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->execute();
 
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 
 
     // Email check 

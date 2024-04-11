@@ -26,6 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $place = $_POST['place'];
     $country = $_POST['country'];
     $code = $_POST['code'];
+    $type = $_POST['role'];
     $imageNames = array();
     if (!empty($_FILES['image']['name'][0])) {
         $imageNames = $fileuplode->uploadImages($_FILES);
@@ -53,6 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         'country' => $country,
         'code' => $code,
         'image' => implode(",", $imageNames),
+        'type'=>$type,
     );
     $result = $userService->updateUser($id, $update_data);
     if ($result && $existing_image && file_exists('../../uploads/' . $existing_image)) {
