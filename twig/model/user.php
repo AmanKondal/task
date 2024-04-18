@@ -52,7 +52,7 @@ class dataBase
         $stmt->closeCursor();
         return $result;
     }
-    // Select all users
+
     public function selectAllUser($offset = 0, $limit = null)
     {
         $sql = "SELECT * FROM user ORDER BY uid ASC LIMIT ?, ?";
@@ -154,14 +154,15 @@ class dataBase
     public function getUsersSorted($order, $offset, $limit)
     {
         $order = strtolower($order);
-        $sql = "SELECT * FROM `user` ORDER BY $order LIMIT :offset, :limit";
+        $sql = "SELECT * FROM `user` ORDER BY $order LIMIT :limit OFFSET :offset";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
         $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
         $stmt->execute();
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+ 
 
 
 

@@ -9,26 +9,36 @@ $loader = new Twig\Loader\FilesystemLoader([
 $uid = $_SESSION['uid'];
 $twig = new Twig\Environment($loader);
 $userService = new UserService();
-$limit = 5;
-$offset = !empty($_POST['page']) ? $_POST['page'] : 1;
-$sno = $offset;
+$limit = 5; // Assuming you want 5 records per page
+
+$currentPage = isset($_POST['page']) ? $_POST['page'] : 1;
+$offset = ($currentPage - 1) * $limit;
+
+if (isset($_POST['page'])) {
+    $offset = $_POST['page'] - 1;
+    $currentPage = floor($offset / $limit) + 1;
+}
+
 $searchValue = isset($_POST['search']) ? $_POST['search'] : '';
 $sortSQL = '';
-$sortOrder = 'ASC';
+
 if (!empty($_POST['coltype']) && !empty($_POST['colorder'])) {
     $coltype = $_POST['coltype'];
     $colorder = $_POST['colorder'];
     $sortSQL = " $coltype $colorder";
-    $sortOrder = strtoupper($colorder);
 }
 $result = $userService->getUsers($limit, $offset, $searchValue, $sortSQL);
-$total_record = $userService->getTotalRecords($searchValue);
+$total_records = $userService->getTotalRecords($searchValue);
+
+// Pagination
 $pagination = new Pagination([
-    'totalRows' => $total_record,
+    'totalRows' => $total_records,
     'perPage' => $limit,
-    'currentPage' => $offset,
+    'currentPage' => $currentPage,
     'contentDiv' => 'dataContainer',
     'link_func' => 'columnSorting'
 ]);
-$paginationLinks = $pagination->createLinks();
-echo $twig->render('userViewList.twig', ['result' => $result, 'sno' => $sno, 'paginationLinks' => $paginationLinks,'uid'=>$uid]);
+$paginationLinks = $pagination->createLinks($result);
+// Calculate starting serial number (sno) based on current page
+$startSno = ($currentPage - 1) * $limit + 1;
+echo $twig->render('userViewList.twig', ['result' => $result, 'sno' => $startSno, 'paginationLinks' => $paginationLinks,'uid'=>$uid]);
