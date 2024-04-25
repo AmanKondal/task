@@ -37,7 +37,7 @@ function validateOtherFields() {
     var requiredFields = ['firstname', 'lastname', 'fathername', 'mothername', 'email', 'street', 'zip_code', 'place', 'country', 'code', 'phone_number', 'password', 'confirm_password'];
     $.each(requiredFields, function (index, fieldName) {
         var inputField = $('#' + fieldName);
-        if (inputField.val().trim() === '') {
+        if (inputField.val().trim() == '') {
             inputField.addClass('is-invalid');
             inputField.after('<div class="error-message">Please enter ' + fieldName.replace('_', ' ') + '.</div>');
             isValid = false;

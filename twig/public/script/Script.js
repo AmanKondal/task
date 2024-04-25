@@ -92,22 +92,6 @@ $("#resetButton").click(function () {
 
 
 
-function showToast(message, type) {
-    var toastElement = $(".toast");
-    var toastBody = $(".toast-body");
-    toastBody.text(message);
-    toastElement.removeClass("bg-success bg-error");
-    if (type.toLowerCase() === "success") {
-        toastElement.addClass("bg-success");
-    } else if (type === "error") {
-        toastElement.addClass("bg-error");
-    }
-    toastElement.toast({ delay: 2000 }).toast("show");
-    setTimeout(function () {
-        toastElement.toast("hide");
-    }, 5000);
-}
-
 // user view
 $(document).ready(function ($) {
     $(document).on("click", ".btn.btn-success", function () {
@@ -181,4 +165,105 @@ $(document).on("submit", "#myForm", function (e) {
 });
 
 
+
+// Password Reset
+$(document).ready(function () {
+    $('#email').on('input', function () {
+        var email = $(this).val();
+        $.ajax({
+            url: 'emailCheck.php',
+            type: 'post',
+            data: { email: email },
+            success: function (response) {
+                if (response == 1) {
+                    $('#email-success').text('Email  exists');
+                } else {
+                    $('#email-error').text('Invalid email');
+                }
+            },
+        });
+    });
+});
+
+
+// Reset Password
+$(document).on("submit", "#resetPassword", function (e) {
+    e.preventDefault();
+    var formData = new FormData(this);
+    $.ajax({
+        url: "sendPasswordReset.php",
+        type: "POST",
+        contentType: false,
+        processData: false,
+        data: formData,
+        success: function (data) {
+            if (data == 1) {
+                showToast("Mail has been sent. Please check your Email", "Success");
+            } else {
+                showToast("Invalid Email", "error");
+            }
+        },
+        error: function () {
+            showToast("Error in updating record", "error");
+        }
+    });
+});
+
+
+
+//new password
+$(document).on("submit", "#newPassword", function (e) {
+
+    // Check password match
+    var passwordInput = $('input[name="password"]');
+    var confirmPasswordInput = $('input[name="confirm_password"]');
+    if (passwordInput.val() !== confirmPasswordInput.val()) {
+        passwordInput.addClass('is-invalid');
+        confirmPasswordInput.addClass('is-invalid');
+        confirmPasswordInput.after('<div class="error-message">Passwords do not match.</div>');
+        isValid = false;
+    }
+
+    // Prevent the default form submission behavior
+    e.preventDefault();
+
+    var formData = new FormData(this);
+    $.ajax({
+        url: "password.php",
+        type: "POST",
+        contentType: false,
+        processData: false,
+        data: formData,
+        success: function (response) {
+            if (response == 1) {
+                window.location = "../index.php";
+                showToast("Your Password Has been Update", "Success");
+            } else {
+                showToast("Your Password Not Reset", "error");
+            }
+        },
+        error: function () {
+            showToast("Error in updating record", "error");
+        }
+    });
+});
+
+
+
+// For notification 
+function showToast(message, type) {
+    var toastElement = $(".toast");
+    var toastBody = $(".toast-body");
+    toastBody.text(message);
+    toastElement.removeClass("bg-success bg-error");
+    if (type.toLowerCase() === "success") {
+        toastElement.addClass("bg-success");
+    } else if (type === "error") {
+        toastElement.addClass("bg-error");
+    }
+    toastElement.toast({ delay: 100 }).toast("show");
+    setTimeout(function () {
+        toastElement.toast("hide");
+    }, 5000);
+}
 

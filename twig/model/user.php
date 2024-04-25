@@ -18,30 +18,6 @@ class dataBase
         }
     }
 
-
-    // Login Code
-    // public function loginSession()
-    // {
-    //     session_start();
-    //     if (isset($_SESSION['email'])) {
-    //         header("location: ../../index.php");
-    //         exit;
-    //     }
-    // }
-
-    // public function noLoginSession()
-    // {
-    //     session_start();
-    //     if (isset($_SESSION['email'])) {
-    //         if ($_SESSION['type'] == 1) {
-    //             header("location: login.php");
-    //         } elseif ($_SESSION['type'] == 0) {
-    //             header("location: index.php");
-    //         }
-    //     }
-    // }
-    
-    
     // Login User Function
     public function loginUser($email, $password)
     {
@@ -53,6 +29,7 @@ class dataBase
         return $result;
     }
 
+    // Select all user
     public function selectAllUser($offset = 0, $limit = null)
     {
         $sql = "SELECT * FROM user ORDER BY uid ASC LIMIT ?, ?";
@@ -81,7 +58,7 @@ class dataBase
     }
 
     // Search user
-    public function searchUser($keyword, $order = 'ASC', $offset, $limit = null)
+    public function searchUser($keyword, $order = 'ASC', $offset = null, $limit = null)
     {
         if ($limit !== null) {
             if (!empty($order)) {
@@ -129,7 +106,7 @@ class dataBase
     }
 
     // update Function 
-    public function updateUser($values = array(), $condition)
+    public function updateUser($values = array(),$condition)
     {
         if (empty($values)) {
             return false;
@@ -162,7 +139,7 @@ class dataBase
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
- 
+
 
 
 
@@ -177,7 +154,7 @@ class dataBase
             if ($stmt->rowCount() > 0) {
                 return $stmt->fetch(PDO::FETCH_ASSOC);
             } else {
-                return null; 
+                return null;
             }
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
@@ -205,7 +182,7 @@ class dataBase
         }
     }
 
-
+    // delete user
     public function deleteUser($id)
     {
         try {
@@ -219,10 +196,10 @@ class dataBase
         }
     }
 
-
+    //  email check
     public function emailCheck($keyword)
     {
-        $searchSql = "SELECT * FROM user WHERE email LIKE ?"; 
+        $searchSql = "SELECT * FROM user WHERE email LIKE ?";
         $stmt = $this->pdo->prepare($searchSql);
         $stmt->bindValue(1, "%$keyword%", PDO::PARAM_STR);
         $stmt->execute();
@@ -230,4 +207,74 @@ class dataBase
         return $result ? $result : false;
     }
 
+
+    public function emailSend($email)
+    {
+        require '../controler/mailer.php';
+
+        $token = bin2hex(random_bytes(16));
+        $token_hash = hash("sha256", $token);
+        $expiry = date("Y-m-d H:i:s", time() + 60 * 30);
+        $sql = "UPDATE user SET reset_token_hash = ?, reset_token_expire_at = ? WHERE email = ?";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(1, $token_hash, PDO::PARAM_STR);
+        $stmt->bindValue(2, $expiry, PDO::PARAM_STR);
+        $stmt->bindValue(3, $email, PDO::PARAM_STR);
+        $stmt->execute();
+        $affectedRows = $stmt->rowCount();
+        if ($affectedRows > 0) {
+            if (sendEmail($email, $token)) {
+                return 1;
+            } else {
+                return 0;
+            }
+        } else {
+            return 0;
+        }
+    }
+
+    public function dataGet($token)
+    {
+        $token_hash = hash("sha256", $token);
+        $sql = "SELECT * FROM user WHERE reset_token_hash=?";
+        $stmt = $this->pdo->prepare($sql); 
+        $stmt->bindValue(1, $token_hash, PDO::PARAM_STR);
+        if (!$stmt->execute()) {
+            // Handle execute error
+            return false;
+        }
+
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if ($result === false) {
+            // Handle fetch error
+            return false;
+        }
+
+        if (empty($result)) {
+            
+            return null;
+        }
+
+        return $result;
+    }
+
+
+    // update password
+    public function updatePassword($userData)
+    {
+        $sql = "UPDATE user SET password=?, reset_token_hash=NULL, reset_token_expire_at=NULL WHERE uid=?";
+        $stmt = $this->pdo->prepare($sql);
+
+        try {
+            $stmt->execute([$userData['password'], $userData['uid']]);
+            // Check if the update was successful
+            if ($stmt->rowCount() > 0) {
+                return 1; 
+            } else {
+                return 0;
+            }
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
 }
