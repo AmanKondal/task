@@ -20,8 +20,8 @@ $('#searchButton').click(function () {
     columnSorting();
 });
 
-var currentPageNumber=1
-function columnSorting(page_num,fn) {
+var currentPageNumber = 1
+function columnSorting(page_num, fn) {
     if (page_num !== undefined) {
         currentPageNumber = page_num;
     }
@@ -31,8 +31,6 @@ function columnSorting(page_num,fn) {
         if ($(this).attr('colorder') != '') {
             coltype = $(this).attr('coltype');
             colorder = $(this).attr('colorder');
-            console.log(colorder)
-
             if (colorder == 'asc') {
                 classAdd = 'asc';
                 classRemove = 'desc';
@@ -90,7 +88,6 @@ $("#resetButton").click(function () {
     loadTable();
 });
 
-// Delete Button
 $(document).on("click", ".btn.btn-danger", function () {
     var confirmDelete = confirm("Do You Really want to Delete this record ?");
     var userId = $(this).data("id");
@@ -103,21 +100,31 @@ $(document).on("click", ".btn.btn-danger", function () {
                 id: userId
             },
             success: function (data) {
+                console.log("AJAX Success Response:", data);
                 if (data == 1) {
-                    $(element).closest("tr").fadeOut();
-                    columnSorting(currentPageNumber, function () { showToast("Record deleted successfully", "success") });
-
+                    $(element).closest("tr").fadeOut(function () {
+                        var rowCount = $('#dataContainer tr').length-2;
+                        console.log("Row Count:", rowCount);
+                        if (rowCount === 1) {
+                            columnSorting(currentPageNumber-5, function () {
+                                showToast("Record deleted successfully", "success");
+                            });
+                        } else {
+                            columnSorting(currentPageNumber, function () {
+                                showToast("Record deleted successfully", "success");
+                            });
+                        }
+                    });
                 } else {
                     showToast("Failed to delete record", "error");
                 }
             },
             error: function () {
                 showToast("Error deleting record", "error");
-            },
+            }
         });
     }
 });
-
 
 function showToast(message, type) {
     var toastElement = $(".toast");
@@ -154,6 +161,7 @@ $(document).ready(function ($) {
     });
 });
 
+
 // update user data 
 $(document).on("submit", "#myForm", function (e) {
     e.preventDefault();
@@ -163,7 +171,7 @@ $(document).on("submit", "#myForm", function (e) {
 
     if (emptyFields.length > 0) {
         showToast("Please fill in all fields", "error");
-        return; 
+        return;
     }
 
     var formData = new FormData(this);
@@ -186,3 +194,31 @@ $(document).on("submit", "#myForm", function (e) {
         }
     });
 });
+
+
+$(document).ready(function () {
+    var email = $('input[type="hidden"]').val();
+
+    var logoutTimer;
+    var urlParams = new URLSearchParams(window.location.search);
+
+    function startLogoutTimer(email) {
+        logoutTimer = setTimeout(function () {
+            window.location.href = '../logout.php?email=' + email;
+        }, 60000);
+    }
+
+    function resetLogoutTimer(email) {
+        clearTimeout(logoutTimer);
+        startLogoutTimer(email);
+    }
+
+    startLogoutTimer(email);
+
+    $(document).on("mousemove keypress", function () {
+        resetLogoutTimer(email);
+    });
+});
+
+
+

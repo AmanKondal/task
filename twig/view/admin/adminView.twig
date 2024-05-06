@@ -1,9 +1,8 @@
 <html>
     {% include 'header.html' %}
     <h2>
-        Welcome 
-            
-        {{ email }}
+        Welcome
+        {{ name }}
     </h2>
     <body>
         <div id="table-data"></div>
@@ -12,17 +11,26 @@
         <script src="../../public/script/admin.js"></script>
         <link href="../../public/css/style.css" rel="stylesheet">
         <script>
-    loadTable(1, function() {
-    showToast("Data load successfully","success");  
-    });
-    </script>
+            loadTable(1);
+
+            function hideLoginMessage() {
+                $('#loginMessage').fadeOut(1000); 
+            }
+            setTimeout(hideLoginMessage, 5000);
+        </script>
+        <input type="hidden" value="{{ email }}">
+        <div class="toast" role="alert" style="position: absolute; right: 80px; top: 30px; margin-right: 50px;" aria-live="assertive" aria-atomic="true">
+            <div id="loginMessage" class=" btn-success">
+                {{ loginMessage }}
+            </div>
+        </div>
         <div class="modal" id="userData" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content"></div>
             </div>
         </div>
         <button class="btn btn-info" id="update" data-eid='{{ uid }}' style="position: absolute; right: 10px; top: 47px; margin-right: 10px;">
-            My-Profile                        
+            My-Profile
         </button>
     </body>
 </html>

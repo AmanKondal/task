@@ -9,8 +9,7 @@ $loader = new Twig\Loader\FilesystemLoader([
 ]);
 $twig = new Twig\Environment($loader);
 $userService = new UserService();
-$limit = 5; // Assuming you want 5 records per page
-
+$limit = 5; 
 $currentPage = isset($_POST['page']) ? $_POST['page'] : 1;
 $offset = ($currentPage - 1) * $limit;
 
@@ -39,7 +38,6 @@ $pagination = new Pagination([
     'link_func' => 'columnSorting'
 ]);
 $paginationLinks = $pagination->createLinks($result);
-// Calculate starting serial number (sno) based on current page
 $startSno = ($currentPage - 1) * $limit + 1;
 
 echo $twig->render('adminUserList.twig', [

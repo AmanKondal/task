@@ -185,7 +185,6 @@ $(document).ready(function () {
     });
 });
 
-
 // Reset Password
 $(document).on("submit", "#resetPassword", function (e) {
     e.preventDefault();
@@ -198,20 +197,21 @@ $(document).on("submit", "#resetPassword", function (e) {
         data: formData,
         success: function (data) {
             if (data == 1) {
+                window.location.href = "passwordReset.php";
                 showToast("Mail has been sent. Please check your Email", "Success");
+                // Reset the form
+                $('#resetPassword')[0].reset();
             } else {
                 showToast("Invalid Email", "error");
             }
         },
         error: function () {
-            showToast("Error in updating record", "error");
+            showToast("Error in sending mail", "error");
         }
     });
 });
 
 
-
-//new password
 $(document).on("submit", "#newPassword", function (e) {
 
     // Check password match
@@ -221,11 +221,9 @@ $(document).on("submit", "#newPassword", function (e) {
         passwordInput.addClass('is-invalid');
         confirmPasswordInput.addClass('is-invalid');
         confirmPasswordInput.after('<div class="error-message">Passwords do not match.</div>');
-        isValid = false;
+        e.preventDefault(); // Prevent form submission
+        return; // Exit the function
     }
-
-    // Prevent the default form submission behavior
-    e.preventDefault();
 
     var formData = new FormData(this);
     $.ajax({
@@ -250,7 +248,6 @@ $(document).on("submit", "#newPassword", function (e) {
 
 
 
-// For notification 
 function showToast(message, type) {
     var toastElement = $(".toast");
     var toastBody = $(".toast-body");
@@ -261,9 +258,35 @@ function showToast(message, type) {
     } else if (type === "error") {
         toastElement.addClass("bg-error");
     }
-    toastElement.toast({ delay: 100 }).toast("show");
+    toastElement.toast({ delay: 2000 }).toast("show");
     setTimeout(function () {
         toastElement.toast("hide");
     }, 5000);
 }
 
+
+$(document).ready(function () {
+    // Retrieve the email value from the hidden input field
+    var email = $('input[type="hidden"]').val();
+
+    var logoutTimer;
+    var urlParams = new URLSearchParams(window.location.search);
+    console.log(email);
+
+    function startLogoutTimer(email) {
+        logoutTimer = setTimeout(function () {
+            window.location.href = '../logout.php?email=' + email;
+        }, 60000);
+    }
+
+    function resetLogoutTimer(email) {
+        clearTimeout(logoutTimer);
+        startLogoutTimer(email);
+    }
+
+    startLogoutTimer(email);
+
+    $(document).on("mousemove keypress", function () {
+        resetLogoutTimer(email);
+    });
+});

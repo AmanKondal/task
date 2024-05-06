@@ -7,7 +7,7 @@ $database = new Database();
 if (isset($_POST['id'])) {
 $id = $_POST['id'];
 $deleted = $database->deleteUser($id);
-if ($deleted) {
+if ($deleted==1) {
 echo 1;
 } else {
 echo 0;

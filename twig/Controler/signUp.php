@@ -1,5 +1,16 @@
 <?php
 session_start();
+
+// Check if the 'f_name' key is set in the session
+if (isset($_SESSION['f_name'])) {
+    // Retrieve the value of 'f_name'
+    $f_name = $_SESSION['f_name'];
+} else {
+    // 'f_name' is not set in the session
+    // You can handle this case accordingly
+    $f_name = ''; // Set a default value or handle the absence of 'f_name'
+}
+
 require_once '../vendor/autoload.php';
 require_once '../service/fileuplode.php';
 $loader = new Twig\Loader\FilesystemLoader('../view');
@@ -7,12 +18,15 @@ $twig = new Twig\Environment($loader);
 $database = new Database();
 $fileuploade = new file();
 $error = '';
+
 if (isset($_SESSION['email'])) {
     header("Location: user/userView.php");
     exit();
 }
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $imageNames = $fileuploade->uploadImages($_FILES);
+
     if (empty($error)) {
         $userData = array(
             'f_name' => $_POST['firstname'],
@@ -33,16 +47,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             'image' => implode(",", $imageNames),
         );
         $email = $_POST['email'];
-        $role=$_POST['role'];
+        $role = $_POST['role'];
         $existingUser = $database->getUserByEmail($email);
+
         if ($existingUser) {
             $error = 'Email already exists';
         } else {
             $insertId = $database->registerUser($userData);
             if ($insertId) {
                 $_SESSION['email'] = $email;
-                $_SESSION['uid']=$insertId;
-                if ($role==1) {
+                $_SESSION['uid'] = $insertId;
+                $_SESSION['f_name'] = $_POST['firstname']; // Assuming you want to set f_name from the form data
+                if ($role == 1) {
                     header("Location: admin/adminView.php");
                 } else {
                     header("Location: user/userView.php");
@@ -54,4 +70,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 }
-echo $twig->render('signUp.twig', ['error' => $error]);
+
+// Render the Twig template and pass the error and f_name variable to it
+echo $twig->render('signUp.twig', ['error' => $error, 'f_name' => $f_name]);

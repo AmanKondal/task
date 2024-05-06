@@ -60,16 +60,6 @@ class Pagination{
 		$end   = (($this->currentPage + $this->numLinks) < $numPages) ? $this->currentPage + $this->numLinks : $numPages;
 
 
-		// Render the "previous" link
-		if  ($this->currentPage != 1){
-			$i = $uriPageNum - $this->perPage;
-			if ($i == 0) $i = '';
-			$output .= $this->prevTagOpen 
-				. $this->getAJAXlink( $i, $this->prevLink )
-				. $this->prevTagClose;
-		}
-
-		// Write the digit links
 		// Write the digit links
 		for ($loop = $start - 1; $loop <= $end; $loop++) {
 			$i = ($loop * $this->perPage) - $this->perPage + 1; // Calculate the appropriate value for columnSorting
@@ -83,14 +73,6 @@ class Pagination{
 						. $this->numTagClose;
 				}
 			}
-		}
-
-
-		// Render the "next" link
-		if ($this->currentPage < $numPages){
-			$output .= $this->nextTagOpen 
-				. $this->getAJAXlink( $this->currentPage * $this->perPage , $this->nextLink )
-				. $this->nextTagClose;
 		}
 
 
