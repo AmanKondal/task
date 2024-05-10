@@ -277,4 +277,27 @@ class dataBase
             return false;
         }
     }
+
+
+    public function validateToken($uid, $token)
+    {
+        $token_hash = hash("sha256", $token);
+        $sql = "SELECT COUNT(*) as count FROM user WHERE uid = ? AND reset_token_hash = ?";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(1, $uid, PDO::PARAM_STR);
+        $stmt->bindValue(2, $token_hash, PDO::PARAM_STR);
+
+        if (!$stmt->execute()) {
+            // Handle execute error
+            return false;
+        }
+
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // Return true if count > 0 (token is valid), false otherwise
+        return ($result['count'] > 0);
+    }
+
 }
+
+

@@ -185,10 +185,12 @@ $(document).ready(function () {
     });
 });
 
+
 // Reset Password
 $(document).on("submit", "#resetPassword", function (e) {
     e.preventDefault();
     var formData = new FormData(this);
+    var form = this;
     $.ajax({
         url: "sendPasswordReset.php",
         type: "POST",
@@ -197,10 +199,8 @@ $(document).on("submit", "#resetPassword", function (e) {
         data: formData,
         success: function (data) {
             if (data == 1) {
-                window.location.href = "passwordReset.php";
+                form.reset();   
                 showToast("Mail has been sent. Please check your Email", "Success");
-                // Reset the form
-                $('#resetPassword')[0].reset();
             } else {
                 showToast("Invalid Email", "error");
             }
@@ -258,7 +258,7 @@ function showToast(message, type) {
     } else if (type === "error") {
         toastElement.addClass("bg-error");
     }
-    toastElement.toast({ delay: 2000 }).toast("show");
+    toastElement.toast({ delay: 200 }).toast("show");
     setTimeout(function () {
         toastElement.toast("hide");
     }, 5000);

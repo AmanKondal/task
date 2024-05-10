@@ -7,16 +7,18 @@ $loader = new Twig\Loader\FilesystemLoader([
 ]);
 $twig = new Twig\Environment($loader);
 $database = new Database();
+
 if (isset($_GET['token'])) {
     $token = $_GET['token'];
-
 }
-$result = $database->dataGet($token);
-if($result){
 
+$result = $database->dataGet($token);
+
+if ($result) {
     echo $twig->render('newPassword.twig', [
         'result' => $result,
+        'token' => $token, 
     ]);
-}else{
-    echo "You Alreday Update Your password";
+} else {
+    echo "You Already Updated Your password";
 }
